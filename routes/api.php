@@ -10,6 +10,9 @@ Route::prefix('v1')
     ->name('api.v1.')
     //路由组
     ->group(function () {
+        Route::get('version', function() {
+            return 'this is version v1';
+        })->name('version');
         // 短信验证码
         Route::post('verificationCodes', 'VerificationCodesController@store')
             ->name('verificationCodes.store');
