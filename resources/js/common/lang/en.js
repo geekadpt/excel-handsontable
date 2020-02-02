@@ -21,4 +21,15 @@ export const m = {
         login: 'Sign In'
 
     },
+    login:{
+        weibo:'weibo',
+        oauth:'Sign in with',
+        credential: 'Or sign in with credentials',
+        phone: 'phone',
+        password: 'password',
+        remember: 'Remember me',
+        login: 'SIGN IN',
+        forgot: 'Forgot password?',
+        register: 'Create new account',
+    },
 };

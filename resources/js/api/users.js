@@ -23,5 +23,13 @@ export default {
             password:data.password
         });
     },
-
+    /**
+     * POST /api/v1/authorizations
+     */
+    login: function(data){
+        return axios.post( HYPERCELL_CONFIG.API_URL + '/authorizations' , {
+            username:data.username,
+            password:data.password
+        });
+    },
 }

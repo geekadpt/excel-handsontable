@@ -31,15 +31,21 @@ export default new VueRouter({
             components: Vue.component( 'Layout', require( './pages/Layout' ) ),
             children: [
                 {
+                    path: 'desktop',
+                    name: 'Desktop',
+                    components: Vue.component( 'Desktop', require( './pages/Desktop' ) ),
+                },
+                {
                     path: 'register',
                     name: 'Register',
                     components: Vue.component( 'Register', require( './pages/Register' ) ),
                 },
                 {
-                    path: 'desktop',
-                    name: 'Desktop',
-                    components: Vue.component( 'Desktop', require( './pages/Desktop' ) ),
+                    path: 'login',
+                    name: 'Login',
+                    components: Vue.component( 'Login', require( './pages/Login' ) ),
                 },
+
             ]
         },
     ]

@@ -16,4 +16,16 @@ export const m ={
         codeSended: '短信验证码已发送到您的手机',
         login:'登陆'
     },
+    login:{
+        weibo:'微博',
+        oauth:'第三方登陆',
+        credential: '或者使用用户名密码登陆',
+        phone: '手机号',
+        password: '密码',
+        remember: '记住我',
+        login: '登陆',
+        forgot: '忘记密码？',
+        register: '注册一个账户',
+    },
+
 };
