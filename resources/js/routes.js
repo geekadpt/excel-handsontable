@@ -26,8 +26,21 @@ export default new VueRouter({
     routes: [
         {
             path: '/',
-            name: 'Layout',
+            redirect: {name: 'Desktop'},
+            name: 'Hypercell',
             components: Vue.component( 'Layout', require( './pages/Layout' ) ),
+            children: [
+                {
+                    path: 'register',
+                    name: 'Register',
+                    components: Vue.component( 'Register', require( './pages/Register' ) ),
+                },
+                {
+                    path: 'desktop',
+                    name: 'Desktop',
+                    components: Vue.component( 'Desktop', require( './pages/Desktop' ) ),
+                },
+            ]
         },
     ]
 });

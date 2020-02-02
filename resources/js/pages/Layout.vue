@@ -119,22 +119,7 @@
             </v-btn>
         </v-app-bar>
         <v-content>
-            <v-container
-                    class="fill-height"
-                    fluid
-            >
-                <v-row
-                        align="center"
-                        justify="center"
-                >
-                    <v-tooltip right>
-                        <template v-slot:activator="{ on }">
-                            {{$t('m.hello')}}
-                        </template>
-                        <span>Source</span>
-                    </v-tooltip>
-                </v-row>
-            </v-container>
+            <router-view></router-view>
         </v-content>
         <v-btn
                 bottom
@@ -229,11 +214,14 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+        <notification></notification>
     </v-app>
 </template>
 
 <script>
+    import Notification from "../components/Notification";
     export default {
+        components: {Notification},
         props: {
             source: String,
         },
@@ -275,8 +263,9 @@
         }),
         methods:{
             changeLang(){
-                this.$i18n.locale = 'zh-CN'
+                this.$i18n.locale = 'en'
             }
         }
+
     }
 </script>

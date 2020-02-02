@@ -14,7 +14,7 @@ switch( process.env.NODE_ENV ){
 		        break;
 }
 
-export const SUPCELL_CONFIG = {
+export const HYPERCELL_CONFIG = {
 	    API_URL: api_url,
 	    APP_URL: app_url,
 };
