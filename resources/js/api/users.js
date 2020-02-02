@@ -12,4 +12,16 @@ export default {
             phone:data.phone
         });
     },
+    /**
+     * POST /api/v1/users
+     */
+    register: function(data){
+        return axios.post( HYPERCELL_CONFIG.API_URL + '/users' , {
+            verification_key:data.verification_key,
+            verification_code:data.verification_code,
+            name:data.name,
+            password:data.password
+        });
+    },
+
 }

@@ -15,7 +15,10 @@ export const users = {
         verificationCodesSendStatus: 0,
         verificationKey:'',
         verificationCodesSendErrors:'',
+        registerStatus: 0,
+        registerErrors: '',
     },
+
     /**
      * Defines the actions used to retrieve the data.
      */
@@ -37,6 +40,23 @@ export const users = {
                     }
                 });
         },
+        register( { commit },data ){
+            commit( 'setRegisterStatus', 1 );
+
+            HypercellApi.register(data)
+                .then( function( response ){
+                    commit( 'setRegisterStatus', 2 );
+                })
+                .catch( function(error){
+                    commit( 'setRegisterStatus', 3 );
+                    if(typeof error.response.data.errors === "undefined"){
+                        commit( 'setRegisterErrors',error.response.data.message);
+
+                    }else{
+                        commit( 'setRegisterErrors', error.response.data.errors[Object.keys(error.response.data.errors)[0]].toString() );
+                    }
+                });
+        },
     },
     /**
      * Defines the mutations used
@@ -50,6 +70,12 @@ export const users = {
         },
         setVerificationCodesSendErrors( state, error){
             state.verificationCodesSendErrors = error;
+        },
+        setRegisterStatus( state, status){
+            state.registerStatus = status;
+        },
+        setRegisterErrors( state, errors){
+            state.registerErrors = errors;
         },
     },
     /**
@@ -68,5 +94,14 @@ export const users = {
         getVerificationCodesSendErrors( state){
             return state.verificationCodesSendErrors;
         },
+        getRegisterStatus( state ){
+            return function () {
+                return state.registerStatus;
+            }
+        },
+        getRegisterErrors( state ){
+            return state.registerErrors;
+        },
+
     }
 };

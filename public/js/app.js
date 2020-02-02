@@ -82260,6 +82260,18 @@ __webpack_require__.r(__webpack_exports__);
     return axios.post(_config_js__WEBPACK_IMPORTED_MODULE_0__["HYPERCELL_CONFIG"].API_URL + '/verificationCodes', {
       phone: data.phone
     });
+  },
+
+  /**
+   * POST /api/v1/users
+   */
+  register: function register(data) {
+    return axios.post(_config_js__WEBPACK_IMPORTED_MODULE_0__["HYPERCELL_CONFIG"].API_URL + '/users', {
+      verification_key: data.verification_key,
+      verification_code: data.verification_code,
+      name: data.name,
+      password: data.password
+    });
   }
 });
 
@@ -82382,7 +82394,7 @@ var m = {
     code: '验证码',
     name: '昵称',
     password: '密码',
-    explainPage1: '这是您将用于登录Vuetify帐户的电话',
+    explainPage1: '这是您将用于登录 HyperCell帐户的电话',
     titlePage1: '手机号',
     explainPage2: '请完善您的个人资料',
     titlePage2: '完善信息',
@@ -82414,7 +82426,7 @@ var m = {
     code: 'code',
     name: 'nickname',
     password: 'password',
-    explainPage1: 'This is the phone you will use to login to your Vuetify account',
+    explainPage1: 'This is the phone you will use to login to your HyperCell account',
     titlePage1: 'Phone',
     codeSending: 'sending...',
     codeSended: 'SMS verification code has been sent to your phone.',
@@ -82575,7 +82587,9 @@ var users = {
   state: {
     verificationCodesSendStatus: 0,
     verificationKey: '',
-    verificationCodesSendErrors: ''
+    verificationCodesSendErrors: '',
+    registerStatus: 0,
+    registerErrors: ''
   },
 
   /**
@@ -82597,6 +82611,21 @@ var users = {
           commit('setVerificationCodesSendErrors', error.response.data.errors[Object.keys(error.response.data.errors)[0]].toString());
         }
       });
+    },
+    register: function register(_ref2, data) {
+      var commit = _ref2.commit;
+      commit('setRegisterStatus', 1);
+      _api_users__WEBPACK_IMPORTED_MODULE_0__["default"].register(data).then(function (response) {
+        commit('setRegisterStatus', 2);
+      })["catch"](function (error) {
+        commit('setRegisterStatus', 3);
+
+        if (typeof error.response.data.errors === "undefined") {
+          commit('setRegisterErrors', error.response.data.message);
+        } else {
+          commit('setRegisterErrors', error.response.data.errors[Object.keys(error.response.data.errors)[0]].toString());
+        }
+      });
     }
   },
 
@@ -82612,6 +82641,12 @@ var users = {
     },
     setVerificationCodesSendErrors: function setVerificationCodesSendErrors(state, error) {
       state.verificationCodesSendErrors = error;
+    },
+    setRegisterStatus: function setRegisterStatus(state, status) {
+      state.registerStatus = status;
+    },
+    setRegisterErrors: function setRegisterErrors(state, errors) {
+      state.registerErrors = errors;
     }
   },
 
@@ -82629,6 +82664,14 @@ var users = {
     },
     getVerificationCodesSendErrors: function getVerificationCodesSendErrors(state) {
       return state.verificationCodesSendErrors;
+    },
+    getRegisterStatus: function getRegisterStatus(state) {
+      return function () {
+        return state.registerStatus;
+      };
+    },
+    getRegisterErrors: function getRegisterErrors(state) {
+      return state.registerErrors;
     }
   }
 };
