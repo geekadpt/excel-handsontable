@@ -19,4 +19,7 @@ Route::prefix('v1')
         // 用户注册
         Route::post('users', 'UsersController@store')
             ->name('users.store');
+        // 登录
+        Route::post('authorizations', 'UsersController@login')
+            ->name('api.authorizations.login');
     });
