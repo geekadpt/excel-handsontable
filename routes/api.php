@@ -22,4 +22,8 @@ Route::prefix('v1')
         // 登录
         Route::post('authorizations', 'UsersController@login')
             ->name('api.authorizations.login');
+        // 第三方登录
+        Route::post('socials/{social_type}/authorizations', 'UsersController@socialStore')
+            ->where('social_type', 'weibo|github')
+            ->name('socials.authorizations.store');
     });

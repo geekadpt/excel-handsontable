@@ -9,6 +9,7 @@ use App\Http\Requests\Api\UserRequest;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\Api\AuthorizationRequest;
+use App\Http\Requests\Api\SocialAuthorizationRequest;
 
 class UsersController extends Controller
 {
@@ -56,4 +57,49 @@ class UsersController extends Controller
             'expires_in' => \Auth::guard('api')->factory()->getTTL() * 60
         ])->setStatusCode(201);
     }
+    //第三方登陆
+    public function socialStore($type, SocialAuthorizationRequest $request)
+    {
+        $driver = \Socialite::driver($type);
+
+        try {
+                $code = $request->code;
+                $response = $driver->getAccessTokenResponse($code);
+                $token = Arr::get($response, 'access_token');
+                $oauthUser = $driver->userFromToken($token);
+        } catch (\Exception $e) {
+            throw new AuthenticationException('参数错误，未获取用户信息');
+        }
+
+        // 在本地 users 表中查询该用户来判断是否已存在
+        $user = User::where( 'provider_id', '=', $oauthUser->id )
+            ->where( 'provider', '=', $type )
+            ->first();
+        if ($user == null) {
+            // 如果该用户不存在则将其保存到 users 表
+            $newUser = new User();
+
+            $newUser->name        = $type=='weibo'?$oauthUser->getNickname():$oauthUser->getName();
+            $oauthUserEmail = $oauthUser->getEmail() ;
+            if($oauthUserEmail !== ''){
+                User::where('email',$oauthUserEmail)->doesntExist() ? $newUser->email = $oauthUserEmail:$newUser->email = null;
+            }else{
+                $newUser->email = '';
+            }
+            $newUser->avatar      = $oauthUser->getAvatar();
+            $newUser->password    = '';
+            $newUser->provider    = $type;
+            $newUser->provider_id = $oauthUser->getId();
+
+            $newUser->save();
+            $user = $newUser;
+        }
+        $token = \Auth::guard('api')->fromUser($user);
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'Bearer',
+            'expires_in' => \Auth::guard('api')->factory()->getTTL() * 60
+        ])->setStatusCode(201);
+    }
+
 }
