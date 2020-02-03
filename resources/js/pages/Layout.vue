@@ -219,6 +219,9 @@
 </template>
 
 <script>
+    // 导入 urls 模块
+    import _urls from '../plugins/urls';
+    import { EventBus } from '../event-bus.js';
     import Notification from "../components/Notification";
     export default {
         components: {Notification},
@@ -261,6 +264,28 @@
                 { icon: 'mdi-keyboard', text: 'Go to the old version' },
             ],
         }),
+        created(){
+            //第三方登陆
+            if(_urls.getUrlParams('code') != null){
+                this.$store.dispatch('oauth', {
+                    social : _urls.getUrlParams('social_type'),
+                    code : _urls.getUrlParams('code'),
+                });
+                this.$watch(this.$store.getters.getOauthStatus, function () {
+                    if (this.$store.getters.getOauthStatus() === 2) {
+                        EventBus.$emit('open-message', {
+                            text: this.$t('m.layout.oauth.success')
+                        });
+                        this.$router.push({name:'Desktop'});
+                    }
+                    if (this.$store.getters.getOauthStatus() === 3) {
+                        EventBus.$emit('open-message', {
+                            text: this.$store.getters.getOauthErrors
+                        });
+                    }
+                });
+            }
+        },
         methods:{
             changeLang(){
                 this.$i18n.locale = 'en'

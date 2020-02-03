@@ -27,5 +27,11 @@ export const m ={
         forgot: '忘记密码？',
         register: '注册一个账户',
     },
+    layout:{
+        oauth:{
+            success:'第三方登陆成功',
+            failed:'第三方登陆失败',
+        },
+    },
 
 };

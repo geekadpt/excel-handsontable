@@ -2041,7 +2041,9 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _components_Notification__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/Notification */ "./resources/js/components/Notification.vue");
+/* harmony import */ var _plugins_urls__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../plugins/urls */ "./resources/js/plugins/urls.js");
+/* harmony import */ var _event_bus_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../event-bus.js */ "./resources/js/event-bus.js");
+/* harmony import */ var _components_Notification__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/Notification */ "./resources/js/components/Notification.vue");
 //
 //
 //
@@ -2262,10 +2264,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+// 导入 urls 模块
+
+
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
-    Notification: _components_Notification__WEBPACK_IMPORTED_MODULE_0__["default"]
+    Notification: _components_Notification__WEBPACK_IMPORTED_MODULE_2__["default"]
   },
   props: {
     source: String
@@ -2325,6 +2330,31 @@ __webpack_require__.r(__webpack_exports__);
         text: 'Go to the old version'
       }]
     };
+  },
+  created: function created() {
+    //第三方登陆
+    if (_plugins_urls__WEBPACK_IMPORTED_MODULE_0__["default"].getUrlParams('code') != null) {
+      this.$store.dispatch('oauth', {
+        social: _plugins_urls__WEBPACK_IMPORTED_MODULE_0__["default"].getUrlParams('social_type'),
+        code: _plugins_urls__WEBPACK_IMPORTED_MODULE_0__["default"].getUrlParams('code')
+      });
+      this.$watch(this.$store.getters.getOauthStatus, function () {
+        if (this.$store.getters.getOauthStatus() === 2) {
+          _event_bus_js__WEBPACK_IMPORTED_MODULE_1__["EventBus"].$emit('open-message', {
+            text: this.$t('m.layout.oauth.success')
+          });
+          this.$router.push({
+            name: 'Desktop'
+          });
+        }
+
+        if (this.$store.getters.getOauthStatus() === 3) {
+          _event_bus_js__WEBPACK_IMPORTED_MODULE_1__["EventBus"].$emit('open-message', {
+            text: this.$store.getters.getOauthErrors
+          });
+        }
+      });
+    }
   },
   methods: {
     changeLang: function changeLang() {
@@ -24253,6 +24283,30 @@ var render = function() {
     ],
     1
   )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/pages/Desktop.vue?vue&type=template&id=48f03aa3&":
+/*!*****************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/pages/Desktop.vue?vue&type=template&id=48f03aa3& ***!
+  \*****************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [_vm._v("\n    我是桌面\n")])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -82791,6 +82845,15 @@ __webpack_require__.r(__webpack_exports__);
       username: data.username,
       password: data.password
     });
+  },
+
+  /**
+   * POST /api/v1//socials/{social_type}/authorizations
+   */
+  oauth: function oauth(data) {
+    return axios.post(_config_js__WEBPACK_IMPORTED_MODULE_0__["HYPERCELL_CONFIG"].API_URL + '/socials/' + data.social + '/authorizations', {
+      code: data.code
+    });
   }
 });
 
@@ -82955,6 +83018,12 @@ var m = {
     login: '登陆',
     forgot: '忘记密码？',
     register: '注册一个账户'
+  },
+  layout: {
+    oauth: {
+      success: '第三方登陆成功',
+      failed: '第三方登陆失败'
+    }
   }
 };
 
@@ -82999,6 +83068,12 @@ var m = {
     login: 'SIGN IN',
     forgot: 'Forgot password?',
     register: 'Create new account'
+  },
+  layout: {
+    oauth: {
+      success: 'oauth succeed',
+      failed: 'oauth failed'
+    }
   }
 };
 
@@ -83156,7 +83231,9 @@ var users = {
     loginStatus: 0,
     loginErrors: '',
     // 存储token
-    Authorization: localStorage.getItem('Authorization') ? localStorage.getItem('Authorization') : ''
+    Authorization: localStorage.getItem('Authorization') ? localStorage.getItem('Authorization') : '',
+    oauthStatus: '',
+    oauthErrors: ''
   },
 
   /**
@@ -83210,6 +83287,27 @@ var users = {
           commit('setLoginErrors', error.response.data.errors[Object.keys(error.response.data.errors)[0]].toString());
         }
       });
+    },
+    oauth: function oauth(_ref4, data) {
+      var commit = _ref4.commit,
+          dispatch = _ref4.dispatch;
+      commit('setOauthStatus', 1);
+      _api_users__WEBPACK_IMPORTED_MODULE_0__["default"].oauth(data).then(function (response) {
+        commit('setLoginToken', 'Bearer ' + response.data.access_token);
+        dispatch('getMyInfo');
+        commit('setLoginStatus', 2);
+        commit('setOauthStatus', 2);
+      })["catch"](function (error) {
+        commit('setOauthStatus', 3);
+        commit('setLoginStatus', 3);
+        commit('setLoginToken', '');
+
+        if (typeof error.response.data.errors === "undefined") {
+          commit('setOauthErrors', error.response.data.message);
+        } else {
+          commit('setOauthErrors', error.response.data.errors[Object.keys(error.response.data.errors)[0]].toString());
+        }
+      });
     }
   },
 
@@ -83241,6 +83339,12 @@ var users = {
     setLoginToken: function setLoginToken(state, access_token) {
       state.Authorization = access_token;
       localStorage.setItem('Authorization', access_token);
+    },
+    setOauthStatus: function setOauthStatus(state, status) {
+      state.loginStatus = status;
+    },
+    setOauthErrors: function setOauthErrors(state, errors) {
+      state.loginErrors = errors;
     }
   },
 
@@ -83277,6 +83381,14 @@ var users = {
     },
     getLoginToken: function getLoginToken(state) {
       return state.Authorization;
+    },
+    getOauthStatus: function getOauthStatus(state) {
+      return function () {
+        return state.loginStatus;
+      };
+    },
+    getOauthErrors: function getOauthErrors(state) {
+      return state.loginErrors;
     }
   }
 };
@@ -83292,17 +83404,18 @@ var users = {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
-var render, staticRenderFns
+/* harmony import */ var _Desktop_vue_vue_type_template_id_48f03aa3___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Desktop.vue?vue&type=template&id=48f03aa3& */ "./resources/js/pages/Desktop.vue?vue&type=template&id=48f03aa3&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
 var script = {}
 
 
 /* normalize component */
 
-var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_0__["default"])(
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_1__["default"])(
   script,
-  render,
-  staticRenderFns,
+  _Desktop_vue_vue_type_template_id_48f03aa3___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _Desktop_vue_vue_type_template_id_48f03aa3___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
   null,
   null,
@@ -83310,8 +83423,28 @@ var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_
   
 )
 
+/* hot reload */
+if (false) { var api; }
 component.options.__file = "resources/js/pages/Desktop.vue"
 /* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/pages/Desktop.vue?vue&type=template&id=48f03aa3&":
+/*!***********************************************************************!*\
+  !*** ./resources/js/pages/Desktop.vue?vue&type=template&id=48f03aa3& ***!
+  \***********************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Desktop_vue_vue_type_template_id_48f03aa3___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./Desktop.vue?vue&type=template&id=48f03aa3& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/pages/Desktop.vue?vue&type=template&id=48f03aa3&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Desktop_vue_vue_type_template_id_48f03aa3___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Desktop_vue_vue_type_template_id_48f03aa3___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
 
 /***/ }),
 
@@ -83519,6 +83652,56 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Register_vue_vue_type_template_id_364a2fac___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
+
+/***/ }),
+
+/***/ "./resources/js/plugins/urls.js":
+/*!**************************************!*\
+  !*** ./resources/js/plugins/urls.js ***!
+  \**************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = ({
+  getUrlParams: function getUrlParams(name) {
+    // 不传name返回所有值，否则返回对应值
+    var url = window.location.search;
+
+    if (url.indexOf('?') == 1) {
+      return false;
+    }
+
+    url = url.substr(1);
+    url = url.split('&');
+    var name = name || '';
+    var nameres; // 获取全部参数及其值
+
+    for (var i = 0; i < url.length; i++) {
+      var info = url[i].split('=');
+      var obj = {};
+      obj[info[0]] = decodeURI(info[1]);
+      url[i] = obj;
+    } // 如果传入一个参数名称，就匹配其值
+
+
+    if (name) {
+      for (var i = 0; i < url.length; i++) {
+        for (var key in url[i]) {
+          if (key == name) {
+            nameres = url[i][key];
+          }
+        }
+      }
+    } else {
+      nameres = url;
+    } // 返回结果
+
+
+    return nameres;
+  }
+});
 
 /***/ }),
 

@@ -32,4 +32,10 @@ export const m = {
         forgot: 'Forgot password?',
         register: 'Create new account',
     },
+    layout:{
+        oauth:{
+            success:'oauth succeed',
+            failed:'oauth failed',
+        },
+    },
 };

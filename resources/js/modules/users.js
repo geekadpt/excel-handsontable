@@ -21,6 +21,8 @@ export const users = {
         loginErrors: '',
         // 存储token
         Authorization: localStorage.getItem('Authorization') ? localStorage.getItem('Authorization') : '',
+        oauthStatus:'',
+        oauthErrors:'',
     },
 
     /**
@@ -79,6 +81,29 @@ export const users = {
                     }
                 });
         },
+        oauth( { commit , dispatch },data ){
+            commit( 'setOauthStatus', 1 );
+
+            HypercellApi.oauth(data)
+                .then( function( response ){
+                    commit('setLoginToken','Bearer ' + response.data.access_token);
+                    dispatch('getMyInfo');
+                    commit( 'setLoginStatus', 2 );
+                    commit( 'setOauthStatus', 2 );
+                })
+                .catch( function(error){
+                    commit( 'setOauthStatus', 3 );
+                    commit( 'setLoginStatus', 3 );
+                    commit('setLoginToken','');
+                    if(typeof error.response.data.errors === "undefined"){
+                        commit( 'setOauthErrors',error.response.data.message);
+
+                    }else{
+                        commit( 'setOauthErrors', error.response.data.errors[Object.keys(error.response.data.errors)[0]].toString() );
+                    }
+                });
+        },
+
 
     },
     /**
@@ -109,6 +134,12 @@ export const users = {
         setLoginToken( state, access_token){
             state.Authorization = access_token;
             localStorage.setItem('Authorization', access_token);
+        },
+        setOauthStatus( state, status){
+            state.loginStatus = status;
+        },
+        setOauthErrors( state, errors){
+            state.loginErrors = errors;
         },
 
     },
@@ -146,6 +177,14 @@ export const users = {
         },
         getLoginToken( state ){
             return state.Authorization;
+        },
+        getOauthStatus( state ){
+            return function () {
+                return state.loginStatus ;
+            }
+        },
+        getOauthErrors( state ){
+            return state.loginErrors;
         },
 
 

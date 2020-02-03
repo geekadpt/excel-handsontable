@@ -32,4 +32,13 @@ export default {
             password:data.password
         });
     },
+    /**
+     * POST /api/v1//socials/{social_type}/authorizations
+     */
+    oauth: function(data){
+        return axios.post( HYPERCELL_CONFIG.API_URL + '/socials/'+data.social+'/authorizations' , {
+            code:data.code,
+        });
+    },
+
 }

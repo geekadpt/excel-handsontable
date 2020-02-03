@@ -17,7 +17,9 @@ class AddOauthOpenidToUsersTable extends Migration
             //
             $table->string('provider')->nullable()->after('password');;
             $table->string('provider_id')->unique()->nullable()->after('provider');
+            $table->text('avatar')->nullable()->after('name');
             $table->string('password')->nullable()->change();
+            $table->string('introduction')->nullable();
         });
     }
 
@@ -32,6 +34,8 @@ class AddOauthOpenidToUsersTable extends Migration
             //
             $table->dropColumn('provider');
             $table->dropColumn('provider_id');
+            $table->dropColumn('avatar');
+            $table->dropColumn('introduction');
             $table->string('password')->nullable(false)->change();
         });
     }

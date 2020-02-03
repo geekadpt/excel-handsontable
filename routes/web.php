@@ -14,3 +14,4 @@
 Route::get('/', function () {
     return view('app');
 });
+Route::get( '/auth/{social}', 'Web\AuthenticationController@getSocialRedirect' );
