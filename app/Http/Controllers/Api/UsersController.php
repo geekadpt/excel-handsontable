@@ -102,5 +102,13 @@ class UsersController extends Controller
             'expires_in' => \Auth::guard('api')->factory()->getTTL() * 60
         ])->setStatusCode(201);
     }
+    public function show(User $user, Request $request)
+    {
+        return new UserResource($user);
+    }
 
+    public function me(Request $request)
+    {
+        return (new UserResource($request->user()))->showSensitiveFields();
+    }
 }
