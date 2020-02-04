@@ -6,12 +6,25 @@ class UserRequest extends FormRequest
 {
     public function rules()
     {
-        return [
-            'name' => 'required|between:3,25|regex:/^[A-Za-z0-9\-\_]+$/',
-            'password' => 'required|alpha_dash|min:6',
-            'verification_key' => 'required|string',
-            'verification_code' => 'required|string',
-        ];
+        switch($this->method()) {
+            case 'POST':
+                return [
+                    'name' => 'required|between:3,25|regex:/^[A-Za-z0-9\-\_]+$/',
+                    'password' => 'required|alpha_dash|min:6',
+                    'verification_key' => 'required|string',
+                    'verification_code' => 'required|string',
+                ];
+                break;
+            case 'PATCH':
+                return [
+                    'name' => 'between:3,25|regex:/^[A-Za-z0-9\-\_]+$/',
+                    'password_origin' => 'required|alpha_dash|min:6',
+                    'password' => 'required|alpha_dash|min:6',
+                    'introduction' => 'string|max:80',
+                ];
+                break;
+        }
+
     }
 
     public function attributes()

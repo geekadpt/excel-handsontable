@@ -42,5 +42,15 @@ export const m ={
             desktop_button:'桌面'
         },
     },
+    profile:{
+        name_label:'昵称',
+        introduction_label:'简介',
+        origin_pwd_label:'原密码',
+        new_pwd_label:'新密码',
+        update_button:'立刻更新',
+        update_success:'更新资料成功',
+        update_failed:'更新资料失败',
+    },
+
 
 };

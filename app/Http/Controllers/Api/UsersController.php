@@ -111,4 +111,20 @@ class UsersController extends Controller
     {
         return (new UserResource($request->user()))->showSensitiveFields();
     }
+    public function update(UserRequest $request)
+    {
+
+        $user = $request->user();
+
+        if(Hash::check($request->password_origin , $user->password)){
+            $user->name= $request->name;
+            $user->introduction= $request->introduction;
+            $user->password =  Hash::make($request->password);
+            $user->update();
+            return (new UserResource($user))->showSensitiveFields();
+        }else{
+            throw new AuthenticationException('incorrect password');
+        }
+
+    }
 }

@@ -47,4 +47,14 @@ export const m = {
             desktop_button:'desktop'
         },
     },
+    profile:{
+        name_label:'Name',
+        introduction_label:'Introduction',
+        origin_pwd_label:'Old password',
+        new_pwd_label:'New password',
+        update_button:'Update',
+        update_success:'update profile succeed',
+        update_failed:'updated profile failed',
+    } ,
+
 };

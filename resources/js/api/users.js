@@ -46,6 +46,17 @@ export default {
     getMyInfo: function(){
         return axios.get( HYPERCELL_CONFIG.API_URL + '/user');
     },
+    /**
+     * PATCH /api/v1/user
+     */
+    updateProfile: function(data){
+        return axios.patch( HYPERCELL_CONFIG.API_URL + '/user' , {
+            name:data.name,
+            password:data.password,
+            password_origin:data.password_origin,
+            introduction: data.introduction
+        });
+    },
 
 
 }

@@ -45,6 +45,16 @@ export default new VueRouter({
                     name: 'Login',
                     components: Vue.component( 'Login', require( './pages/Login' ) ),
                 },
+                {
+                    path: 'profile',
+                    name: 'Profile',
+                    components: Vue.component( 'Profile', require( './pages/Profile' ) ),
+                },
+                {
+                    path: 'table',
+                    name: 'Table',
+                    components: Vue.component( 'Profile', require( './pages/Table' ) ),
+                },
 
             ]
         },

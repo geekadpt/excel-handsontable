@@ -355,7 +355,6 @@
 
         computed:{
             user(){
-                console.log(this.$store.getters.getMyInfo);
                 return this.$store.getters.getMyInfo;
             },
             menuItems(){

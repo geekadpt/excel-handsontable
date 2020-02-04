@@ -25,6 +25,8 @@ export const users = {
         oauthErrors:'',
         getMyInfoStatus: 0,
         myInfo:'',
+        updateMyInfoStatus:0,
+        updateMyInfoErrors: '',
 
     },
 
@@ -124,6 +126,23 @@ export const users = {
                     commit( 'setGetMyInfoStatus', 3 );
                 });
         },
+        updateMyInfo( { commit },data){
+            commit( 'setUpdateMyInfoStatus', 1 );
+
+            HypercellApi.updateProfile(data)
+                .then( function( response ){
+                    commit( 'setUpdateMyInfoStatus', 2 );
+                })
+                .catch( function(error){
+                    commit( 'setUpdateMyInfoStatus', 3 );
+                    if(typeof error.response.data.errors === "undefined"){
+                        commit( 'setUpdateMyInfoErrors',error.response.data.message);
+
+                    }else{
+                        commit( 'setUpdateMyInfoErrors', error.response.data.errors[Object.keys(error.response.data.errors)[0]].toString() );
+                    }
+                });
+        },
 
 
     },
@@ -167,6 +186,12 @@ export const users = {
         },
         setMyInfo( state, myInfo){
             state.myInfo = myInfo;
+        },
+        setUpdateMyInfoStatus( state, status){
+            state.updateMyInfoStatus = status;
+        },
+        setUpdateMyInfoErrors( state, errors){
+            state.updateMyInfoErrors = errors;
         },
 
 
@@ -221,6 +246,14 @@ export const users = {
         },
         getMyInfo( state){
             return state.myInfo;
+        },
+        getUpdateMyInfoStatus( state){
+            return function(){
+                return state.updateMyInfoStatus;
+            }
+        },
+        getUpdateMyInfoErrors( state){
+            return state.updateMyInfoErrors ;
         },
 
 
