@@ -40,5 +40,12 @@ export default {
             code:data.code,
         });
     },
+    /**
+     * POST /api/v1/user
+     */
+    getMyInfo: function(){
+        return axios.get( HYPERCELL_CONFIG.API_URL + '/user');
+    },
+
 
 }

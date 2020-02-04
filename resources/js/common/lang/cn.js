@@ -32,6 +32,15 @@ export const m ={
             success:'第三方登陆成功',
             failed:'第三方登陆失败',
         },
+        appbar:{
+            my_charts:'我的表格',
+            user_center:'用户中心',
+            edit_profile:'编辑资料',
+            logout:'退出登陆',
+            search:'搜索文件',
+            login:'登陆',
+            desktop_button:'桌面'
+        },
     },
 
 };

@@ -23,6 +23,9 @@ export const users = {
         Authorization: localStorage.getItem('Authorization') ? localStorage.getItem('Authorization') : '',
         oauthStatus:'',
         oauthErrors:'',
+        getMyInfoStatus: 0,
+        myInfo:'',
+
     },
 
     /**
@@ -103,6 +106,24 @@ export const users = {
                     }
                 });
         },
+        getMyInfo( { commit }){
+            commit( 'setGetMyInfoStatus', 1 );
+
+            HypercellApi.getMyInfo()
+                .then( function( response ){
+                    commit( 'setLoginStatus', 2 );
+                    commit( 'setGetMyInfoStatus', 2 );
+                    //console.log(response.data);
+                    commit('setMyInfo',response.data);
+                })
+                .catch( function(error){
+                    commit( 'setLoginStatus', 3 );
+                    localStorage.removeItem('Authorization');
+                    commit('setLoginToken', '');
+                    commit('setMyInfo','');
+                    commit( 'setGetMyInfoStatus', 3 );
+                });
+        },
 
 
     },
@@ -141,6 +162,13 @@ export const users = {
         setOauthErrors( state, errors){
             state.loginErrors = errors;
         },
+        setGetMyInfoStatus( state, status){
+            state.getMyInfoStatus = status;
+        },
+        setMyInfo( state, myInfo){
+            state.myInfo = myInfo;
+        },
+
 
     },
     /**
@@ -185,6 +213,14 @@ export const users = {
         },
         getOauthErrors( state ){
             return state.loginErrors;
+        },
+        getMyInfoStatus( state){
+            return function () {
+                return state.getMyInfoStatus;
+            }
+        },
+        getMyInfo( state){
+            return state.myInfo;
         },
 
 

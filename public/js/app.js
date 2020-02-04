@@ -2264,6 +2264,49 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 // 导入 urls 模块
 
 
@@ -2332,7 +2375,8 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   created: function created() {
-    //第三方登陆
+    this.$store.dispatch('getMyInfo'); //第三方登陆
+
     if (_plugins_urls__WEBPACK_IMPORTED_MODULE_0__["default"].getUrlParams('code') != null) {
       this.$store.dispatch('oauth', {
         social: _plugins_urls__WEBPACK_IMPORTED_MODULE_0__["default"].getUrlParams('social_type'),
@@ -2340,6 +2384,7 @@ __webpack_require__.r(__webpack_exports__);
       });
       this.$watch(this.$store.getters.getOauthStatus, function () {
         if (this.$store.getters.getOauthStatus() === 2) {
+          this.$store.dispatch('getMyInfo');
           _event_bus_js__WEBPACK_IMPORTED_MODULE_1__["EventBus"].$emit('open-message', {
             text: this.$t('m.layout.oauth.success')
           });
@@ -2357,8 +2402,52 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   methods: {
+    appbarMenuFunction: function appbarMenuFunction(index) {
+      switch (index) {
+        case 0:
+          this.$router.push({
+            name: 'Desktop'
+          });
+          break;
+
+        case 1:
+          this.$router.push({
+            name: 'Profile'
+          });
+          break;
+
+        case 2:
+          this.$store.dispatch('logout');
+          this.$router.push({
+            name: 'Login'
+          });
+          break;
+
+        default:
+          break;
+      }
+    },
     changeLang: function changeLang() {
       this.$i18n.locale = 'en';
+    }
+  },
+  computed: {
+    user: function user() {
+      console.log(this.$store.getters.getMyInfo);
+      return this.$store.getters.getMyInfo;
+    },
+    menuItems: function menuItems() {
+      var appbar_menu = [{
+        icon: 'grid_on',
+        title: this.$t('m.layout.appbar.my_charts')
+      }, {
+        icon: 'account_box',
+        title: this.$t('m.layout.appbar.edit_profile')
+      }, {
+        icon: 'play_arrow',
+        title: this.$t('m.layout.appbar.logout')
+      }];
+      return appbar_menu;
     }
   }
 });
@@ -2520,8 +2609,12 @@ __webpack_require__.r(__webpack_exports__);
       });
       this.$watch(this.$store.getters.getLoginStatus, function () {
         if (this.$store.getters.getLoginStatus() === 2) {
+          this.$store.dispatch('getMyInfo');
           _event_bus_js__WEBPACK_IMPORTED_MODULE_0__["EventBus"].$emit('open-message', {
             text: '登陆成功'
+          });
+          this.$router.push({
+            name: 'Desktop'
           });
         }
 
@@ -24572,26 +24665,147 @@ var render = function() {
             1
           ),
           _vm._v(" "),
-          _c(
-            "v-btn",
-            { attrs: { icon: "", large: "" } },
-            [
-              _c(
-                "v-avatar",
-                { attrs: { size: "32px", item: "" } },
+          _vm.user === ""
+            ? _c(
+                "router-link",
+                { attrs: { to: { name: "Login" }, tag: "span" } },
                 [
-                  _c("v-img", {
-                    attrs: {
-                      src: "https://cdn.vuetifyjs.com/images/logos/logo.svg",
-                      alt: "Vuetify"
-                    }
-                  })
+                  _c(
+                    "v-btn",
+                    { attrs: { icon: "", large: "" } },
+                    [
+                      !_vm.user.avatar
+                        ? _c(
+                            "v-avatar",
+                            { attrs: { size: "32px", item: "" } },
+                            [
+                              _c("v-img", {
+                                attrs: {
+                                  src:
+                                    "https://cdn.vuetifyjs.com/images/logos/logo.svg",
+                                  alt: "Vuetify"
+                                }
+                              })
+                            ],
+                            1
+                          )
+                        : _vm._e()
+                    ],
+                    1
+                  )
                 ],
                 1
               )
-            ],
-            1
-          )
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.user !== ""
+            ? _c(
+                "v-menu",
+                {
+                  attrs: { bottom: "" },
+                  scopedSlots: _vm._u(
+                    [
+                      {
+                        key: "activator",
+                        fn: function(ref) {
+                          var on = ref.on
+                          return [
+                            _c(
+                              "v-btn",
+                              { attrs: { icon: "", large: "" } },
+                              [
+                                _vm.user.avatar === null
+                                  ? _c(
+                                      "v-avatar",
+                                      _vm._g(
+                                        {
+                                          attrs: {
+                                            color: "blue",
+                                            size: "32px",
+                                            item: ""
+                                          }
+                                        },
+                                        on
+                                      ),
+                                      [
+                                        _c(
+                                          "span",
+                                          {
+                                            staticClass: "white--text headline"
+                                          },
+                                          [
+                                            _vm._v(
+                                              _vm._s(_vm.user.name.substr(0, 1))
+                                            )
+                                          ]
+                                        )
+                                      ]
+                                    )
+                                  : _vm._e(),
+                                _vm._v(" "),
+                                _vm.user.avatar !== null
+                                  ? _c(
+                                      "v-avatar",
+                                      _vm._g(
+                                        { attrs: { size: "32px", item: "" } },
+                                        on
+                                      ),
+                                      [
+                                        _c("v-img", {
+                                          attrs: {
+                                            src: _vm.user.avatar,
+                                            alt: "avatar"
+                                          }
+                                        })
+                                      ],
+                                      1
+                                    )
+                                  : _vm._e()
+                              ],
+                              1
+                            )
+                          ]
+                        }
+                      }
+                    ],
+                    null,
+                    false,
+                    4010453298
+                  )
+                },
+                [
+                  _vm._v(" "),
+                  _c(
+                    "v-list",
+                    _vm._l(_vm.menuItems, function(item, i) {
+                      return _c(
+                        "v-list-item",
+                        {
+                          key: i,
+                          on: {
+                            click: function($event) {
+                              return _vm.appbarMenuFunction(i)
+                            }
+                          }
+                        },
+                        [
+                          _c("v-list-item-action", [
+                            _c("i", { staticClass: "material-icons" }, [
+                              _vm._v(_vm._s(item.icon))
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c("v-list-item-title", [_vm._v(_vm._s(item.title))])
+                        ],
+                        1
+                      )
+                    }),
+                    1
+                  )
+                ],
+                1
+              )
+            : _vm._e()
         ],
         1
       ),
@@ -82854,6 +83068,13 @@ __webpack_require__.r(__webpack_exports__);
     return axios.post(_config_js__WEBPACK_IMPORTED_MODULE_0__["HYPERCELL_CONFIG"].API_URL + '/socials/' + data.social + '/authorizations', {
       code: data.code
     });
+  },
+
+  /**
+   * POST /api/v1/user
+   */
+  getMyInfo: function getMyInfo() {
+    return axios.get(_config_js__WEBPACK_IMPORTED_MODULE_0__["HYPERCELL_CONFIG"].API_URL + '/user');
   }
 });
 
@@ -83023,6 +83244,15 @@ var m = {
     oauth: {
       success: '第三方登陆成功',
       failed: '第三方登陆失败'
+    },
+    appbar: {
+      my_charts: '我的表格',
+      user_center: '用户中心',
+      edit_profile: '编辑资料',
+      logout: '退出登陆',
+      search: '搜索文件',
+      login: '登陆',
+      desktop_button: '桌面'
     }
   }
 };
@@ -83073,6 +83303,15 @@ var m = {
     oauth: {
       success: 'oauth succeed',
       failed: 'oauth failed'
+    },
+    appbar: {
+      my_charts: 'My sheets',
+      user_center: 'User center',
+      edit_profile: 'Edit profile',
+      logout: 'Logout',
+      search: 'Search',
+      login: 'login',
+      desktop_button: 'desktop'
     }
   }
 };
@@ -83233,7 +83472,9 @@ var users = {
     // 存储token
     Authorization: localStorage.getItem('Authorization') ? localStorage.getItem('Authorization') : '',
     oauthStatus: '',
-    oauthErrors: ''
+    oauthErrors: '',
+    getMyInfoStatus: 0,
+    myInfo: ''
   },
 
   /**
@@ -83308,6 +83549,22 @@ var users = {
           commit('setOauthErrors', error.response.data.errors[Object.keys(error.response.data.errors)[0]].toString());
         }
       });
+    },
+    getMyInfo: function getMyInfo(_ref5) {
+      var commit = _ref5.commit;
+      commit('setGetMyInfoStatus', 1);
+      _api_users__WEBPACK_IMPORTED_MODULE_0__["default"].getMyInfo().then(function (response) {
+        commit('setLoginStatus', 2);
+        commit('setGetMyInfoStatus', 2); //console.log(response.data);
+
+        commit('setMyInfo', response.data);
+      })["catch"](function (error) {
+        commit('setLoginStatus', 3);
+        localStorage.removeItem('Authorization');
+        commit('setLoginToken', '');
+        commit('setMyInfo', '');
+        commit('setGetMyInfoStatus', 3);
+      });
     }
   },
 
@@ -83345,6 +83602,12 @@ var users = {
     },
     setOauthErrors: function setOauthErrors(state, errors) {
       state.loginErrors = errors;
+    },
+    setGetMyInfoStatus: function setGetMyInfoStatus(state, status) {
+      state.getMyInfoStatus = status;
+    },
+    setMyInfo: function setMyInfo(state, myInfo) {
+      state.myInfo = myInfo;
     }
   },
 
@@ -83389,6 +83652,14 @@ var users = {
     },
     getOauthErrors: function getOauthErrors(state) {
       return state.loginErrors;
+    },
+    getMyInfoStatus: function getMyInfoStatus(state) {
+      return function () {
+        return state.getMyInfoStatus;
+      };
+    },
+    getMyInfo: function getMyInfo(state) {
+      return state.myInfo;
     }
   }
 };

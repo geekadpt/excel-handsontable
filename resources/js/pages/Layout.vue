@@ -104,19 +104,62 @@
             <v-btn icon>
                 <v-icon>mdi-bell</v-icon>
             </v-btn>
-            <v-btn
-                    icon
-                    large
-            >
-                <v-avatar
-                        size="32px"
-                        item
+            <router-link :to="{ name:'Login' }"  tag="span" v-if="user === ''">
+                <v-btn
+                        icon
+                        large
                 >
-                    <v-img
-                            src="https://cdn.vuetifyjs.com/images/logos/logo.svg"
-                            alt="Vuetify"
-                    /></v-avatar>
-            </v-btn>
+                    <v-avatar v-if="!user.avatar"
+                            size="32px"
+                            item
+                    >
+                        <v-img
+                                src="https://cdn.vuetifyjs.com/images/logos/logo.svg"
+                                alt="Vuetify"
+                        /></v-avatar>
+                </v-btn>
+            </router-link>
+            <v-menu bottom v-if="user !== ''">
+                <template v-slot:activator="{ on }">
+                    <v-btn
+                            icon
+                            large
+                    >
+                        <v-avatar
+                                color="blue"
+                                v-if="user.avatar === null"
+                                size="32px"
+                                item
+                                v-on="on"
+                        >
+                            <span class="white--text headline">{{user.name.substr(0,1)}}</span>
+                        </v-avatar>
+                        <v-avatar
+                                size="32px"
+                                item
+                                v-if="user.avatar !== null"
+                                v-on="on"
+                        >
+                            <v-img
+                                    :src="user.avatar"
+                                    alt="avatar"
+                            /></v-avatar>
+                    </v-btn>
+                </template>
+
+                <v-list>
+                    <v-list-item
+                            v-for="(item, i) in menuItems"
+                            :key="i"
+                            @click="appbarMenuFunction(i)"
+                    >
+                        <v-list-item-action>
+                            <i class="material-icons">{{ item.icon }}</i>
+                        </v-list-item-action>
+                        <v-list-item-title>{{ item.title }}</v-list-item-title>
+                    </v-list-item>
+                </v-list>
+            </v-menu>
         </v-app-bar>
         <v-content>
             <router-view></router-view>
@@ -265,6 +308,7 @@
             ],
         }),
         created(){
+            this.$store.dispatch('getMyInfo');
             //第三方登陆
             if(_urls.getUrlParams('code') != null){
                 this.$store.dispatch('oauth', {
@@ -273,6 +317,7 @@
                 });
                 this.$watch(this.$store.getters.getOauthStatus, function () {
                     if (this.$store.getters.getOauthStatus() === 2) {
+                        this.$store.dispatch('getMyInfo');
                         EventBus.$emit('open-message', {
                             text: this.$t('m.layout.oauth.success')
                         });
@@ -287,10 +332,40 @@
             }
         },
         methods:{
-            changeLang(){
-                this.$i18n.locale = 'en'
-            }
-        }
+            appbarMenuFunction(index){
+                switch (index) {
+                    case 0 :
+                        this.$router.push({name:'Desktop'});
+                        break;
 
+                    case 1 :
+                        this.$router.push({name:'Profile'});
+                        break;
+                    case 2 :
+                        this.$store.dispatch('logout');
+                        this.$router.push({name:'Login'});
+                        break;
+                    default: break;
+                }
+            },
+            changeLang(){
+                this.$i18n.locale = 'en';
+            },
+        },
+
+        computed:{
+            user(){
+                console.log(this.$store.getters.getMyInfo);
+                return this.$store.getters.getMyInfo;
+            },
+            menuItems(){
+                let appbar_menu = [
+                    { icon: 'grid_on',title: this.$t('m.layout.appbar.my_charts') },
+                    { icon: 'account_box',title: this.$t('m.layout.appbar.edit_profile') },
+                    { icon: 'play_arrow',title: this.$t('m.layout.appbar.logout') },
+                ];
+                return appbar_menu;
+            },
+        }
     }
 </script>

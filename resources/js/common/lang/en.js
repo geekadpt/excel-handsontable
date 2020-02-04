@@ -37,5 +37,14 @@ export const m = {
             success:'oauth succeed',
             failed:'oauth failed',
         },
+        appbar:{
+            my_charts:'My sheets',
+            user_center:'User center',
+            edit_profile:'Edit profile',
+            logout:'Logout',
+            search:'Search',
+            login:'login',
+            desktop_button:'desktop'
+        },
     },
 };
