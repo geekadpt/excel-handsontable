@@ -65,6 +65,7 @@
                     // manualColumnMove: true,
                     // manualRowMove: true,
                 },
+                mergeArrSubmit:[],
             };
         },
         components: {
@@ -72,6 +73,23 @@
         },
         mounted() {
             this.hotRef = this.$refs.hypercell.hotInstance;
+            Handsontable.hooks.add('afterMergeCells', this.mergeCells, this.hotRef);
+            Handsontable.hooks.add('afterUnmergeCells', this.unMergeCells, this.hotRef);
+        },
+        methods:{
+            mergeCells(){
+                if (this.hotRef !==  undefined) {
+                    this.mergeArrSubmit = JSON.parse(JSON.stringify(this.hotRef.getPlugin('mergeCells').mergedCellsCollection.mergedCells));
+                    console.log(this.mergeArrSubmit);
+                }
+            },
+            unMergeCells(){
+                if (this.hotRef !==  undefined) {
+                    this.mergeArrSubmit = JSON.parse(JSON.stringify(this.hotRef.getPlugin('mergeCells').mergedCellsCollection.mergedCells));
+                    console.log(this.mergeArrSubmit);
+                }
+            },
         }
+
     }
 </script>
