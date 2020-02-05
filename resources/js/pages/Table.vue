@@ -16,7 +16,7 @@
                         <v-list-item
                                 v-for="(item, index) in formatItems"
                                 :key="index"
-                                @click="changeCellType"
+                                @click="changeCellType(index)"
                         >
                             <v-list-item-title>{{ item.title }}</v-list-item-title>
                         </v-list-item>
@@ -47,7 +47,8 @@
                 hotRef:null,
                 hotSettings:{
                     //表格数据
-                    data: Handsontable.helper.createSpreadsheetData(20, 20),
+                    data: [[]],
+                    columns:[],
                     //表格整体宽度
                     width: '100%',
                     //行表头
@@ -92,13 +93,19 @@
                 },
                 mergeArrSubmit:[],
                 cellSubmit:[],
+                selectedCells:'',
             };
         },
         components: {
             HotTable,HYPERCELL_CONFIG
         },
+        created() {
+            this.initColumn();
+        },
         mounted() {
             this.hotRef = this.$refs.hypercell.hotInstance;
+            this.hotRef.alter('insert_row', this.hotRef.countRows(),40);
+            Handsontable.hooks.add('afterSelection', this.getSelected, this.hotRef);
             Handsontable.hooks.add('afterMergeCells', this.mergeCells, this.hotRef);
             Handsontable.hooks.add('afterUnmergeCells', this.unMergeCells, this.hotRef);
             Handsontable.hooks.add('beforeCellAlignment',this.cellAlignment, this.hotRef);
@@ -217,18 +224,88 @@
             },
             changeCellType(index){
                 switch(index){
-                    case 0:break;
-                    case 1:break;
-                    case 2:break;
-                    case 3:break;
-                    case 4:break;
-                    case 5:break;
-                    case 6:break;
-                    case 7:break;
+                    case 0:
+                        this.hotSettings.columns[this.selectedCells[0][1]]={
+                            type:'text'
+                        };
+                        this.hotRef.updateSettings(this.hotSettings);
+                        break;
+                    case 1:
+                        this.hotSettings.columns[this.selectedCells[0][1]]={
+                            type: 'numeric',
+                            numericFormat: {
+                                pattern: '0,0',
+                            },
+                        };
+                        this.hotRef.updateSettings(this.hotSettings);
+                        break;
+                    case 2:
+                        this.hotSettings.columns[this.selectedCells[0][1]]={
+                            type: 'numeric',
+                            numericFormat: {
+                                pattern: '0,0.00',
+                            }
+                        };
+                        this.hotRef.updateSettings(this.hotSettings);
+                        break;
+                    case 3:
+                        this.hotSettings.columns[this.selectedCells[0][1]]={
+                            type: 'numeric',
+                            numericFormat: {
+                                pattern: '$0,0',
+                            }
+                        };
+                        this.hotRef.updateSettings(this.hotSettings);
+                        break;
+                    case 4:
+                        this.hotSettings.columns[this.selectedCells[0][1]]={
+                            type: 'numeric',
+                            numericFormat: {
+                                pattern: '$0,0.00',
+                            }
+                        };
+
+                        this.hotRef.updateSettings(this.hotSettings);
+                        break;
+                    case 5:
+                        this.hotSettings.columns[this.selectedCells[0][1]]={
+                            type: 'date',
+                            dateFormat: 'MM/DD/YYYY',
+                            correctFormat: true,
+                            defaultDate: '01/01/2000',
+                        };
+                        this.hotRef.updateSettings(this.hotSettings);
+                        break;
+                    case 6:
+                        this.hotSettings.columns[this.selectedCells[0][1]]={
+                            type: 'time',
+                            timeFormat: 'h:mm:ss a',
+                            correctFormat: true
+                        };
+                        this.hotRef.updateSettings(this.hotSettings);
+                        break;
+                    case 7:
+                        this.hotSettings.columns[this.selectedCells[0][1]]={
+                            type: 'checkbox',
+                            checkedTemplate: 'yes',
+                            uncheckedTemplate: 'no'
+                        };
+                        this.hotRef.updateSettings(this.hotSettings);
+                        break;
                     default:break;
                 }
-            }
-
+            },
+            initColumn(){
+                let k = 10;
+                for(let a=0;a<k;a++){
+                    this.hotSettings.columns.push({
+                        type:'text'
+                    });
+                }
+            },
+            getSelected(){
+                this.selectedCells = this.hotRef.getSelected();
+            },
         },
         computed:{
             formatItems(){
@@ -243,7 +320,8 @@
                     { title: this.$t('m.table.format.checkbox') },
                 ];
             }
-        }
+        },
+
 
     }
 </script>
