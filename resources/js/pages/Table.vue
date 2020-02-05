@@ -1,7 +1,47 @@
 <template >
-    <div >
+    <div>
         <template>
             <v-card class="text-left pa-2">
+                <v-menu open-on-hover bottom offset-y>
+                    <template v-slot:activator="{ on }">
+                        <v-btn
+                                text
+                                small
+                                v-on="on"
+                        >
+                            {{$t('m.table.insert.title')}}
+                        </v-btn>
+                    </template>
+
+                    <v-list>
+                        <v-list-item
+                                @click="prepareSetComment"
+                        >
+                            <v-list-item-action>
+                                <i class="material-icons">comment</i>
+                            </v-list-item-action>
+                            <v-list-item-title> {{$t('m.table.insert.comment')}}</v-list-item-title>
+                        </v-list-item>
+
+
+                        <v-list-item
+                                @click="insertColumnRight"
+                        >
+                            <v-list-item-action>
+                                <i class="material-icons">view_column</i>
+                            </v-list-item-action>
+                            <v-list-item-title>{{$t('m.table.insert.column')}}</v-list-item-title>
+                        </v-list-item>
+                        <v-list-item
+                                @click="insertRowBottom"
+                        >
+                            <v-list-item-action>
+                                <i class="material-icons">view_headline</i>
+                            </v-list-item-action>
+                            <v-list-item-title>{{$t('m.table.insert.row')}}</v-list-item-title>
+                        </v-list-item>
+                    </v-list>
+                </v-menu>
                 <v-menu open-on-hover bottom offset-y>
                     <template v-slot:activator="{ on }">
                         <v-btn
@@ -28,6 +68,38 @@
         <div id="hotTable" class="hotTable">
             <HotTable :root="root" ref="hypercell" :settings="hotSettings" ></HotTable>
         </div>
+        <template>
+            <v-dialog v-model="dialog_comment" persistent width="600px">
+                <v-card class="justify-space-between">
+                    <v-card-title>
+                        <span class="headline">{{$t('m.table.comment.title')}}</span>
+                    </v-card-title>
+                    <v-card-text>
+                        <template>
+                            <div class="">
+                                <v-form
+                                        ref="comment_form"
+                                        v-model="comment_valid"
+                                        lazy-validation
+                                >
+                                    <v-text-field
+                                            v-model="comment"
+                                            :counter="60"
+                                            :rules="commentRules"
+                                            :label="$t('m.table.comment.label')"
+                                    ></v-text-field>
+                                </v-form>
+                            </div>
+                        </template>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="green darken-1" text @click="dialog_comment=false">{{$t('m.table.comment.cancel')}}</v-btn>
+                        <v-btn color="green darken-1" text @click="setComment">{{$t('m.table.comment.submit')}}</v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+        </template>
     </div>
 </template>
 
@@ -94,6 +166,12 @@
                 mergeArrSubmit:[],
                 cellSubmit:[],
                 selectedCells:'',
+                comment:'',
+                comment_valid:true,
+                commentRules: [
+                    v => (v.length <= 60) || 'Name must be less than 60 characters',
+                ],
+                dialog_comment:false,
             };
         },
         components: {
@@ -109,6 +187,7 @@
             Handsontable.hooks.add('afterMergeCells', this.mergeCells, this.hotRef);
             Handsontable.hooks.add('afterUnmergeCells', this.unMergeCells, this.hotRef);
             Handsontable.hooks.add('beforeCellAlignment',this.cellAlignment, this.hotRef);
+            this.hotRef.selectCell(0,0);
         },
         methods:{
             mergeCells(){
@@ -306,6 +385,55 @@
             getSelected(){
                 this.selectedCells = this.hotRef.getSelected();
             },
+            insertColumnRight(){
+                this.hotSettings.columns.push({
+                    type: 'text',
+                });
+                this.hotRef.updateSettings(this.hotSettings);
+
+            },
+            insertRowBottom(){
+                this.hotRef.alter('insert_row', this.hotRef.countRows(),20);
+
+            },
+            setComment(){
+                if(this.comment_valid === false){
+                    EventBus.$emit('open-message', {
+                        text: 'invalid value'
+                    });
+                    return 0;
+                }
+                // Access to the Comments plugin instance:
+                const commentsPlugin = this.hotRef.getPlugin('comments');
+                // Manage comments programmatically:
+                let selectedRow = this.selectedCells[0][0];
+                let selectedCol = this.selectedCells[0][1];
+                commentsPlugin.setCommentAtCell(selectedRow , selectedCol , this.comment);
+                let cellIndex = this.findCellIndex(selectedCol,selectedRow);
+                //console.log(cellIndex);
+                if(  cellIndex === null){
+                    this.cellSubmit.push({
+                        row: selectedRow,
+                        col: selectedCol,
+                        comment: {
+                            value:this.comment
+                        }
+                    });
+                    this.hotSettings.cell= this.cellSubmit;
+                }else{
+                    this.cellSubmit[cellIndex]['comment'] = {
+                        value:this.comment
+                    };
+                    this.hotSettings.cell= this.cellSubmit;
+                }
+                this.dialog_comment = false;
+            },
+            prepareSetComment(){
+                const commentsPlugin = this.hotRef.getPlugin('comments');
+                this.comment = commentsPlugin.getCommentAtCell(this.selectedCells[0][0], this.selectedCells[0][1]);
+                this.dialog_comment = true;
+            },
+
         },
         computed:{
             formatItems(){

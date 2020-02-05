@@ -52,6 +52,18 @@ export const m ={
         update_failed:'更新资料失败',
     },
     table:{
+        insert:{
+            title:'插入',
+            column:'列',
+            comment:'备注',
+            row:'行',
+        },
+        comment:{
+            title:'编辑备注',
+            label:'备注',
+            cancel:'取消',
+            submit:'提交',
+        },
         format:{
             title:'格式',
             text:'文本',

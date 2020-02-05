@@ -57,6 +57,18 @@ export const m = {
         update_failed:'updated profile failed',
     } ,
     table:{
+        insert:{
+            title:'insert',
+            column:'column',
+            comment:'comment',
+            row:'row',
+        },
+        comment:{
+            title:'Edit Comment',
+            label:'comment',
+            cancel:'cancel',
+            submit:'submit',
+        },
         format:{
             title:'format',
             text:'text',
