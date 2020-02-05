@@ -56,5 +56,20 @@ export const m = {
         update_success:'update profile succeed',
         update_failed:'updated profile failed',
     } ,
+    table:{
+        format:{
+            title:'format',
+            text:'text',
+            numeric:'numeric',
+            numeric_dot:'numeric(dot)',
+            price:'price',
+            price_dot:'price(dot)',
+            date:'date',
+            time:'time',
+            checkbox:'checkbox',
+
+        },
+    },
+
 
 };

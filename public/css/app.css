@@ -1,0 +1,25 @@
+.v-navigation-drawer--fixed,
+.v-btn--fixed {
+  z-index: 202 !important;
+}
+
+.v-app-bar--fixed,
+.v-bottom-navigation {
+  z-index: 201 !important;
+}
+
+.ht_clone_top,
+.ht_clone_left,
+.ht_clone_top_left_corner,
+.ht__selection--columns {
+  z-index: 0 !important;
+}
+
+.handsontable .current {
+  z-index: 0 !important;
+}
+
+.highlight--error {
+  background-color: rgba(255, 255, 255, 0.7) !important;
+}
+

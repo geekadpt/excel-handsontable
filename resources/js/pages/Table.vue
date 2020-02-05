@@ -1,5 +1,30 @@
 <template >
     <div >
+        <template>
+            <v-card class="text-left pa-2">
+                <v-menu open-on-hover bottom offset-y>
+                    <template v-slot:activator="{ on }">
+                        <v-btn
+                                text
+                                small
+                                v-on="on"
+                        >
+                            {{$t('m.table.format.title')}}
+                        </v-btn>
+                    </template>
+                    <v-list>
+                        <v-list-item
+                                v-for="(item, index) in formatItems"
+                                :key="index"
+                                @click="changeCellType"
+                        >
+                            <v-list-item-title>{{ item.title }}</v-list-item-title>
+                        </v-list-item>
+                    </v-list>
+                </v-menu>
+            </v-card>
+        </template>
+        <v-divider></v-divider>
         <div id="hotTable" class="hotTable">
             <HotTable :root="root" ref="hypercell" :settings="hotSettings" ></HotTable>
         </div>
@@ -190,7 +215,34 @@
                 }
                 return null;
             },
+            changeCellType(index){
+                switch(index){
+                    case 0:break;
+                    case 1:break;
+                    case 2:break;
+                    case 3:break;
+                    case 4:break;
+                    case 5:break;
+                    case 6:break;
+                    case 7:break;
+                    default:break;
+                }
+            }
 
+        },
+        computed:{
+            formatItems(){
+                return [
+                    { title: this.$t('m.table.format.text') },
+                    { title: this.$t('m.table.format.numeric') },
+                    { title: this.$t('m.table.format.numeric_dot') },
+                    { title: this.$t('m.table.format.price') },
+                    { title: this.$t('m.table.format.price_dot') },
+                    { title: this.$t('m.table.format.date') },
+                    { title: this.$t('m.table.format.time') },
+                    { title: this.$t('m.table.format.checkbox') },
+                ];
+            }
         }
 
     }

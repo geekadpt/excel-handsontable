@@ -51,6 +51,20 @@ export const m ={
         update_success:'更新资料成功',
         update_failed:'更新资料失败',
     },
+    table:{
+        format:{
+            title:'格式',
+            text:'文本',
+            numeric:'数字',
+            numeric_dot:'数字(小数点)',
+            price:'价钱',
+            price_dot:'价钱(小数点)',
+            date:'日期',
+            time:'时间',
+            checkbox:'复选框',
+        },
+    },
+
 
 
 };
