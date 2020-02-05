@@ -66,6 +66,7 @@
                     // manualRowMove: true,
                 },
                 mergeArrSubmit:[],
+                cellSubmit:[],
             };
         },
         components: {
@@ -75,6 +76,7 @@
             this.hotRef = this.$refs.hypercell.hotInstance;
             Handsontable.hooks.add('afterMergeCells', this.mergeCells, this.hotRef);
             Handsontable.hooks.add('afterUnmergeCells', this.unMergeCells, this.hotRef);
+            Handsontable.hooks.add('beforeCellAlignment',this.cellAlignment, this.hotRef);
         },
         methods:{
             mergeCells(){
@@ -89,6 +91,106 @@
                     console.log(this.mergeArrSubmit);
                 }
             },
+            cellAlignment(){
+                console.log(arguments);
+                let startCol = arguments[1][0]['from']['col'];
+                let endCol = arguments[1][0]['to']['col'];
+                let startRow = arguments[1][0]['from']['row'];
+                let endRow = arguments[1][0]['to']['row'];
+                let alignType = arguments[2];
+                console.log(alignType);
+                let alignClass = arguments[3];
+                console.log(alignClass);
+                switch (alignType) {
+                    case "horizontal":
+                        for(let i= startCol;i <= endCol;i++){
+                            for (let j = startRow;j <= endRow;j++){
+                                //console.log(this.cellSubmit);
+                                if(this.cellSubmit.length !== 0 ){
+                                    //
+                                    if( this.findCellIndex(i,j) !== null){
+                                        console.log('changeAligning');
+                                        if(this.cellSubmit[this.findCellIndex(i,j)]['className'] !== undefined){
+                                            let classArr = this.cellSubmit[this.findCellIndex(i,j)]['className'].split(' ');
+                                            this.cellSubmit[this.findCellIndex(i,j)]['className'] = alignClass + ' ' + classArr[1];
+                                        }else{
+                                            this.cellSubmit[this.findCellIndex(i,j)]['className'] = alignClass+ ' htMiddle'
+                                        }
+                                        this.hotSettings.cell= this.cellSubmit;
+                                    }else{
+                                        console.log('pushing');
+                                        this.cellSubmit.push({
+                                            row:j,
+                                            col:i,
+                                            className:  alignClass + ' htMiddle'
+                                        });
+                                        this.hotSettings.cell= this.cellSubmit;
+                                    }
+
+                                }else{
+                                    console.log('firstPushing');
+                                    this.cellSubmit.push({
+                                        row:j,
+                                        col:i,
+                                        className: alignClass + ' htMiddle'
+                                    });
+                                    this.hotSettings.cell= this.cellSubmit;
+                                }
+                            }
+                        }
+                        break;
+                    case "vertical":
+                        for(let i= startCol;i <= endCol;i++){
+                            for (let j = startRow;j <= endRow;j++){
+                                //console.log(this.cellSubmit);
+                                if(this.cellSubmit.length !== 0 ){
+
+                                    //
+                                    if( this.findCellIndex(i,j) !== null){
+                                        console.log('changeAligning');
+                                        if(this.cellSubmit[this.findCellIndex(i,j)]['className'] !== undefined){
+                                            let classArr = this.cellSubmit[this.findCellIndex(i,j)]['className'].split(' ');
+                                            console.log(classArr);
+                                            this.cellSubmit[this.findCellIndex(i,j)]['className'] = classArr[0]+ ' ' + alignClass;
+                                        }else{
+                                            this.cellSubmit[this.findCellIndex(i,j)]['className'] = 'htCenter '+ alignClass
+                                        }
+                                        this.hotSettings.cell= this.cellSubmit;
+                                    }else{
+                                        console.log('pushing');
+                                        this.cellSubmit.push({
+                                            row:j,
+                                            col:i,
+                                            className:  'htCenter ' + alignClass
+                                        });
+                                        this.hotSettings.cell= this.cellSubmit;
+                                    }
+
+                                }else{
+                                    console.log('firstPushing');
+                                    this.cellSubmit.push({
+                                        row:j,
+                                        col:i,
+                                        className: 'htCenter '+ alignClass
+                                    });
+                                    this.hotSettings.cell= this.cellSubmit;
+                                }
+                            }
+                        }
+                        break;
+                    default: break;
+                }
+                console.log(this.cellSubmit);
+            },
+            findCellIndex(coltosearch, rowtosearch) {
+                for (var i = 0; i < this.cellSubmit.length; i++) {
+                    if (this.cellSubmit[i]['col'] ===  coltosearch && this.cellSubmit[i]['row'] === rowtosearch) {
+                        return i;
+                    }
+                }
+                return null;
+            },
+
         }
 
     }
