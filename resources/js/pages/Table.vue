@@ -1,6 +1,44 @@
 <template >
     <div>
         <template>
+            <div>
+                <v-card
+                        class="d-flex justify-space-between"
+                >
+                    <div
+
+                    >
+                        <template>
+                            <v-chip
+                                    class="ma-2"
+                                    :color="autosave.color"
+                                    small
+                                    text-color="white"
+                            >
+                                <i class="material-icons">autorenew</i>
+                                {{autosave.message}}
+                            </v-chip>
+                        </template>
+                    </div>
+                    <div>
+                        <v-list-item
+                                class="adjust-brand"
+                        >
+                            <v-list-item-action>
+                                <i class="material-icons">import_contacts</i>
+                            </v-list-item-action>
+                            <v-list-item-content>
+                                <v-list-item-title>
+                                    {{$t('m.table.brand')}}
+                                </v-list-item-title>
+                            </v-list-item-content>
+                        </v-list-item>
+                    </div>
+                </v-card>
+            </div>
+        </template>
+        <v-divider></v-divider>
+        <template>
             <v-card class="text-left pa-2">
                 <v-menu open-on-hover bottom offset-y>
                     <template v-slot:activator="{ on }">
@@ -172,6 +210,18 @@
                     v => (v.length <= 60) || 'Name must be less than 60 characters',
                 ],
                 dialog_comment:false,
+
+                name_update: null,
+                nameRules: [
+                    v => !!v || 'Name is required',
+                    v => (v && v.length <= 10) || 'Name must be less than 10 characters',
+                ],
+                table_id:null,
+                autosave:{
+                    message:'',
+                    color:'',
+                },
+
             };
         },
         components: {
@@ -433,7 +483,35 @@
                 this.comment = commentsPlugin.getCommentAtCell(this.selectedCells[0][0], this.selectedCells[0][1]);
                 this.dialog_comment = true;
             },
+            savetable:function () {
+                this.autosave.message = this.$t('m.table.autosaving');
+                this.autosave.color = "blue";
+                this.$store.dispatch('savetable',{
+                    name:this.$t('m.table.name'),
+                    data:this.hotRef.getSourceData(),
+                    merge: this.hotRef.getPlugin('mergeCells').mergedCellsCollection.mergedCells,
+                    cell:this.cellSubmit,
+                    column:this.hotSettings.columns
+                });
+                this.$watch(this.$store.getters.getSaveTableStatus, function () {
+                    if (this.$store.getters.getSaveTableStatus() === 2) {
+                        this.autosave.message = this.$t('m.table.autosave_success');
+                        this.autosave.color = "green";
+                        EventBus.$emit('open-message', {
+                            text: this.$t('m.table.save_to_cloud')
 
+                        });
+                        this.table_id = this.$store.getters.getSaveTableResult.id;
+                    }
+                    if (this.$store.getters.getSaveTableStatus() === 3) {
+                        this.autosave.message = this.$t('m.table.autosave_failed');
+                        this.autosave.color = "red";
+                        EventBus.$emit('open-message', {
+                            text: this.$t('m.system.error')
+                        });
+                    }
+                });
+            },
         },
         computed:{
             formatItems(){
