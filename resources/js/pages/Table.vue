@@ -47,6 +47,52 @@
                                 small
                                 v-on="on"
                         >
+                            {{$t('m.table.file.title')}}
+                        </v-btn>
+                    </template>
+
+                    <v-list>
+
+                        <v-list-item
+                                @click="dialog_update=true"
+                        >
+                            <v-list-item-action>
+                                <i class="material-icons">save</i>
+                            </v-list-item-action>
+
+                            <v-list-item-content>
+                                <v-list-item-title>
+                                    {{$t('m.table.file.save')}}
+                                </v-list-item-title>
+                            </v-list-item-content>
+                        </v-list-item>
+
+                        <v-list-item
+                                @click="exportTable"
+                        >
+                            <v-list-item-action>
+                                <i class="material-icons">file_download</i>
+                            </v-list-item-action>
+                            <v-list-item-title> {{$t('m.table.file.export')}}</v-list-item-title>
+                        </v-list-item>
+
+                        <v-list-item
+                                @click="clearTable"
+                        >
+                            <v-list-item-action>
+                                <i class="material-icons">close</i>
+                            </v-list-item-action>
+                            <v-list-item-title> {{$t('m.table.file.clear')}}</v-list-item-title>
+                        </v-list-item>
+                    </v-list>
+                </v-menu>
+                <v-menu open-on-hover bottom offset-y>
+                    <template v-slot:activator="{ on }">
+                        <v-btn
+                                text
+                                small
+                                v-on="on"
+                        >
                             {{$t('m.table.insert.title')}}
                         </v-btn>
                     </template>
@@ -100,9 +146,174 @@
                         </v-list-item>
                     </v-list>
                 </v-menu>
+                <v-menu open-on-hover bottom offset-y>
+                    <template v-slot:activator="{ on }">
+                        <v-btn
+                                text
+                                small
+                                v-on="on"
+                        >
+                            {{$t('m.table.language.title')}}
+                        </v-btn>
+                    </template>
+
+                    <v-list>
+                        <v-list-item
+                                @click="changeLangToZhCN"
+                        >
+                            <v-list-item-action>
+                                <i class="material-icons">language</i>
+                            </v-list-item-action>
+                            <v-list-item-title>{{$t('m.table.language.center')}}</v-list-item-title>
+                        </v-list-item>
+                        <v-list-item
+                                @click="changeLangToEnUS"
+                        >
+                            <v-list-item-action>
+                                <i class="material-icons">language</i>
+                            </v-list-item-action>
+                            <v-list-item-title>{{$t('m.table.language.service')}}</v-list-item-title>
+                        </v-list-item>
+
+                    </v-list>
+                </v-menu>
             </v-card>
         </template>
+
         <v-divider></v-divider>
+        <template>
+            <v-card class="pa-2">
+                <v-tooltip bottom>
+                    <template v-slot:activator="{ on }">
+                        <v-btn depressed small v-on="on" @click="insertColumnRight"><i class="material-icons">view_column</i></v-btn>
+                    </template>
+                    <span>{{$t('m.table.insert.column')}}</span>
+                </v-tooltip>
+                <v-tooltip bottom>
+                    <template v-slot:activator="{ on }">
+                        <v-btn depressed small v-on="on" @click="insertRowBottom"><i class="material-icons">view_headline</i></v-btn>
+                    </template>
+                    <span>{{$t('m.table.insert.row')}}</span>
+                </v-tooltip>
+                <v-tooltip bottom>
+                    <template v-slot:activator="{ on }">
+                        <v-btn  depressed small v-on="on" @click="changeCellType(0)"><i class="material-icons">format_color_text</i></v-btn>
+                    </template>
+                    <span>{{$t('m.table.format.text')}}</span>
+                </v-tooltip>
+                <v-tooltip bottom>
+                    <template v-slot:activator="{ on }">
+                        <v-btn depressed small v-on="on" @click="changeCellType(1)"><i class="material-icons">view_list</i></v-btn>
+                    </template>
+                    <span>{{$t('m.table.format.numeric')}}</span>
+                </v-tooltip>
+                <v-tooltip bottom>
+                    <template v-slot:activator="{ on }">
+                        <v-btn depressed small v-on="on" @click="changeCellType(2)"><i class="material-icons">view_list</i></v-btn>
+                    </template>
+                    <span>{{$t('m.table.format.numeric_dot')}}</span>
+                </v-tooltip>
+                <v-tooltip bottom>
+                    <template v-slot:activator="{ on }">
+                        <v-btn depressed small v-on="on" @click="changeCellType(3)"><i class="material-icons">money_off</i></v-btn>
+                    </template>
+                    <span>{{$t('m.table.format.price')}}</span>
+                </v-tooltip>
+                <v-tooltip bottom>
+                    <template v-slot:activator="{ on }">
+                        <v-btn depressed small v-on="on" @click="changeCellType(4)"><i class="material-icons">attach_money</i></v-btn>
+                    </template>
+                    <span>{{$t('m.table.format.price_dot')}}</span>
+                </v-tooltip>
+                <v-tooltip bottom>
+                    <template v-slot:activator="{ on }">
+                        <v-btn depressed small v-on="on" @click="changeCellType(5)"><i class="material-icons">date_range</i></v-btn>
+                    </template>
+                    <span>{{$t('m.table.format.date')}}</span>
+                </v-tooltip>
+                <v-tooltip bottom>
+                    <template v-slot:activator="{ on }">
+                        <v-btn depressed small v-on="on" @click="changeCellType(6)"><i class="material-icons">access_time</i></v-btn>
+                    </template>
+                    <span>{{$t('m.table.format.time')}}</span>
+                </v-tooltip>
+                <v-tooltip bottom>
+                    <template v-slot:activator="{ on }">
+                        <v-btn depressed small v-on="on" @click="changeCellType(7)"><i class="material-icons">check_circle</i></v-btn>
+                    </template>
+                    <span>{{$t('m.table.format.checkbox')}}</span>
+                </v-tooltip>
+                <v-menu open-on-hover bottom offset-y>
+                    <template v-slot:activator="{ on }">
+                        <v-btn depressed small v-on="on" @click="supcell"><i class="material-icons">functions</i></v-btn>
+                    </template>
+
+                    <v-list>
+                        <v-list-item
+                                @click="formula('sum')"
+                        >
+                            <v-list-item-title>SUM</v-list-item-title>
+                        </v-list-item>
+                        <v-list-item
+                                @click="formula('average')"
+                        >
+                            <v-list-item-title>AVERAGE</v-list-item-title>
+                        </v-list-item>
+                        <v-list-item
+                                @click="formula('max')"
+                        >
+                            <v-list-item-title>MAX</v-list-item-title>
+                        </v-list-item>
+                        <v-list-item
+                                @click="formula('min')"
+                        >
+                            <v-list-item-title>MIN</v-list-item-title>
+                        </v-list-item>
+                        <v-list-item
+                                @click="formula('and')"
+                        >
+                            <v-list-item-title>AND</v-list-item-title>
+                        </v-list-item>
+                        <v-list-item
+                                @click="formula('count')"
+                        >
+                            <v-list-item-title>COUNT</v-list-item-title>
+                        </v-list-item>
+                        <v-list-item
+                                @click="formula('accrint')"
+                        >
+                            <v-list-item-title>ACCRINT</v-list-item-title>
+                        </v-list-item>
+                        <v-list-item
+                                @click="formula('BAHTTEXT')"
+                        >
+                            <v-list-item-title>BAHTTEXT</v-list-item-title>
+                        </v-list-item>
+                        <v-list-item
+                                @click="formula('Date')"
+                        >
+                            <v-list-item-title>DATE</v-list-item-title>
+                        </v-list-item>
+                        <v-list-item
+                                @click="formula('ADDRESS')"
+                        >
+                            <v-list-item-title>ADDRESS</v-list-item-title>
+                        </v-list-item>
+                        <v-list-item
+                                @click="formula('ABS')"
+                        >
+                            <v-list-item-title>ABS</v-list-item-title>
+                        </v-list-item>
+                    </v-list>
+                </v-menu>
+                <v-tooltip bottom>
+                    <template v-slot:activator="{ on }">
+                        <v-btn depressed small v-on="on" @click="prepareSetComment"><i class="material-icons">comment</i></v-btn>
+                    </template>
+                    <span>{{$t('m.table.insert.comment')}}</span>
+                </v-tooltip>
+            </v-card>
+        </template>
         <div id="hotTable" class="hotTable">
             <HotTable :root="root" ref="hypercell" :settings="hotSettings" ></HotTable>
         </div>
@@ -134,6 +345,39 @@
                         <v-spacer></v-spacer>
                         <v-btn color="green darken-1" text @click="dialog_comment=false">{{$t('m.table.comment.cancel')}}</v-btn>
                         <v-btn color="green darken-1" text @click="setComment">{{$t('m.table.comment.submit')}}</v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+        </template>
+        <template>
+            <v-dialog v-model="dialog_update" persistent width="600px">
+                <v-card class="justify-space-between">
+                    <v-card-title>
+                        <span class="headline">{{$t('m.table.update.title')}}</span>
+                    </v-card-title>
+                    <v-card-text>
+                        <template>
+                            <div class="">
+                                <v-form
+                                        ref="form"
+                                        v-model="valid"
+                                        lazy-validation
+                                >
+                                    <v-text-field
+                                            v-model="name_update"
+                                            :counter="10"
+                                            :rules="nameRules"
+                                            :label="$t('m.table.update.label')"
+                                            required
+                                    ></v-text-field>
+                                </v-form>
+                            </div>
+                        </template>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="green darken-1" text @click="dialog_update = false">{{$t('m.table.update.cancel')}}</v-btn>
+                        <v-btn color="green darken-1" text @click="updateTable">{{$t('m.table.update.update')}}</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-dialog>
@@ -200,6 +444,7 @@
                     // manualColumnResize: true,
                     // manualColumnMove: true,
                     // manualRowMove: true,
+                    afterChange: this.afterChangeMe,
                 },
                 mergeArrSubmit:[],
                 cellSubmit:[],
@@ -211,7 +456,9 @@
                 ],
                 dialog_comment:false,
 
+                dialog_update:false,
                 name_update: null,
+                valid:true,
                 nameRules: [
                     v => !!v || 'Name is required',
                     v => (v && v.length <= 10) || 'Name must be less than 10 characters',
@@ -228,11 +475,42 @@
             HotTable,HYPERCELL_CONFIG
         },
         created() {
-            this.initColumn();
+            if(this.$route.params.table !== undefined){
+                this.table_id = this.$route.params.table;
+                this.$store.dispatch('getMyTable',{
+                    table_id : this.$route.params.table
+                });
+                this.$watch(this.$store.getters.getGetMyTableStatus, function () {
+                    if (this.$store.getters.getGetMyTableStatus() === 2) {
+                        this.name_update = this.$store.getters.getMyTable.name;
+                        //console.log(this.$store.getters.getMyTable.merge);
+                        this.hotSettings.mergeCells = eval("(" + this.$store.getters.getMyTable.merge + ")");
+                        this.hotSettings.cell = eval("(" + this.$store.getters.getMyTable.cell + ")");
+                        this.hotSettings.columns = eval("(" + this.$store.getters.getMyTable.column + ")");
+                        //console.log(this.hotSettings.mergeCells.length);
+                        if(this.hotSettings.mergeCells === null ){
+                            this.hotSettings.mergeCells = true;
+                        }
+                        this.hotSettings.data = eval("(" + this.$store.getters.getMyTable.data + ")");
+                        this.cellSubmit = this.hotSettings.cell;
+                        this.autosave.message = this.$t('m.table.autosave_success');
+                        this.autosave.color = "green";
+                    }
+                    if (this.$store.getters.getGetMyTableStatus() === 3) {
+
+                    }
+                });
+            }else {
+                this.initColumn();
+            }
         },
+
         mounted() {
             this.hotRef = this.$refs.hypercell.hotInstance;
             this.hotRef.alter('insert_row', this.hotRef.countRows(),40);
+            if(this.$route.params.table === undefined){
+                this.saveTable();
+            }
             Handsontable.hooks.add('afterSelection', this.getSelected, this.hotRef);
             Handsontable.hooks.add('afterMergeCells', this.mergeCells, this.hotRef);
             Handsontable.hooks.add('afterUnmergeCells', this.unMergeCells, this.hotRef);
@@ -243,13 +521,13 @@
             mergeCells(){
                 if (this.hotRef !==  undefined) {
                     this.mergeArrSubmit = JSON.parse(JSON.stringify(this.hotRef.getPlugin('mergeCells').mergedCellsCollection.mergedCells));
-                    console.log(this.mergeArrSubmit);
+                    this.updateTable();
                 }
             },
             unMergeCells(){
                 if (this.hotRef !==  undefined) {
                     this.mergeArrSubmit = JSON.parse(JSON.stringify(this.hotRef.getPlugin('mergeCells').mergedCellsCollection.mergedCells));
-                    console.log(this.mergeArrSubmit);
+                    this.updateTable();
                 }
             },
             cellAlignment(){
@@ -341,7 +619,8 @@
                         break;
                     default: break;
                 }
-                console.log(this.cellSubmit);
+                this.hotSettings.mergeCells = this.mergeArrSubmit;
+                this.updateTable();
             },
             findCellIndex(coltosearch, rowtosearch) {
                 for (var i = 0; i < this.cellSubmit.length; i++) {
@@ -423,6 +702,8 @@
                         break;
                     default:break;
                 }
+                this.hotSettings.mergeCells = this.mergeArrSubmit;
+                this.updateTable();
             },
             initColumn(){
                 let k = 10;
@@ -439,11 +720,14 @@
                 this.hotSettings.columns.push({
                     type: 'text',
                 });
+                this.hotSettings.mergeCells = this.mergeArrSubmit;
                 this.hotRef.updateSettings(this.hotSettings);
+                this.updateTable();
 
             },
             insertRowBottom(){
                 this.hotRef.alter('insert_row', this.hotRef.countRows(),20);
+                this.updateTable();
 
             },
             setComment(){
@@ -476,17 +760,19 @@
                     };
                     this.hotSettings.cell= this.cellSubmit;
                 }
+                this.hotSettings.mergeCells = this.mergeArrSubmit;
                 this.dialog_comment = false;
+                this.updateTable();
             },
             prepareSetComment(){
                 const commentsPlugin = this.hotRef.getPlugin('comments');
                 this.comment = commentsPlugin.getCommentAtCell(this.selectedCells[0][0], this.selectedCells[0][1]);
                 this.dialog_comment = true;
             },
-            savetable:function () {
+            saveTable:function () {
                 this.autosave.message = this.$t('m.table.autosaving');
                 this.autosave.color = "blue";
-                this.$store.dispatch('savetable',{
+                this.$store.dispatch('saveTable',{
                     name:this.$t('m.table.name'),
                     data:this.hotRef.getSourceData(),
                     merge: this.hotRef.getPlugin('mergeCells').mergedCellsCollection.mergedCells,
@@ -502,6 +788,7 @@
 
                         });
                         this.table_id = this.$store.getters.getSaveTableResult.id;
+                        this.name_update = this.$store.getters.getSaveTableResult.name;
                     }
                     if (this.$store.getters.getSaveTableStatus() === 3) {
                         this.autosave.message = this.$t('m.table.autosave_failed');
@@ -511,6 +798,63 @@
                         });
                     }
                 });
+            },
+            updateTable:function () {
+                console.log('ss');
+                if(this.valid === false){
+                    EventBus.$emit('open-message', {
+                        text: 'invalid value'
+                    });
+                    return 0;
+                }
+                if(this.table_id === null || this.mergeArrSubmit === null || this.name_update === null || this.hotSettings.columns.length === 0 || this.hotRef === undefined){
+                    return 0;
+                }
+                this.autosave.message = this.$t('m.table.autosaving');
+                this.autosave.color = "blue";
+                this.$store.dispatch('updateMyTable',{
+                    table_id:this.table_id,
+                    name:this.name_update,
+                    //header:this.Headers,
+                    data:this.hotRef.getSourceData(),
+                    merge: this.hotRef.getPlugin('mergeCells').mergedCellsCollection.mergedCells,
+                    cell:this.cellSubmit,
+                    column:this.hotSettings.columns
+                });
+                this.$watch(this.$store.getters.getUpdateMyTableStatus, function () {
+                    if (this.$store.getters.getUpdateMyTableStatus() === 2) {
+                        this.dialog_update = false;
+                        this.autosave.message = this.$t('m.table.autosave_success');
+                        this.autosave.color = "green";
+                    }
+                    if (this.$store.getters.getUpdateMyTableStatus() === 3) {
+                        this.autosave.message = this.$t('m.table.autosave_failed');
+                        this.autosave.color = "red";
+                    }
+                });
+            },
+            afterChangeMe(){
+                this.updateTable();
+
+            },
+            supcell(){
+                console.log('Yuxuan is invincible');
+            },
+            formula(type){
+                this.hotRef.setDataAtCell(this.selectedCells[0][0],this.selectedCells[0][1],'='+type.toUpperCase()+'(');
+            },
+            changeLangToZhCN(){
+                this.hotSettings.language = "zh-CN";
+            },
+            changeLangToEnUS(){
+                this.hotSettings.language= "en-US";
+            },
+            exportTable(){
+                this.hotRef.getPlugin("exportFile").downloadFile("csv", {filename: "Supcell"});
+            },
+            clearTable(){
+                this.hotRef.clear();
+
             },
         },
         computed:{

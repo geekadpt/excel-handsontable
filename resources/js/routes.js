@@ -51,9 +51,14 @@ export default new VueRouter({
                     components: Vue.component( 'Profile', require( './pages/Profile' ) ),
                 },
                 {
-                    path: 'table',
+                    path: 'table/:table?',
                     name: 'Table',
                     components: Vue.component( 'Profile', require( './pages/Table' ) ),
+                },
+                {
+                    path: 'trash',
+                    name: 'Trash',
+                    components: Vue.component( 'Trash', require( './pages/Trash' ) ),
                 },
 
             ]

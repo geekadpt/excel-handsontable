@@ -49,4 +49,9 @@ class User extends Authenticatable implements MustVerifyEmailContract, JWTSubjec
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function table()
+    {
+        return $this->hasMany('App\Models\Table');
+    }
 }

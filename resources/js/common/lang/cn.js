@@ -41,6 +41,26 @@ export const m ={
             login:'登陆',
             desktop_button:'桌面'
         },
+        navigation_drawer:{
+            desktop:'我的桌面',
+            sheets:{
+                text:'表格',
+                new:'新建表格',
+                recent:'最近编辑',
+                collection:'我的收藏',
+                deleted:'最近删除'
+            },
+            more:{
+                text:'更多',
+                import:'导入表格',
+                export:'导出表格',
+            },
+            settings:'设置',
+            feedback:'问题反馈',
+            help:'帮助文档',
+            contact:'联系我们',
+            change_language:'语言切换'
+        },
     },
     profile:{
         name_label:'昵称',
@@ -52,6 +72,25 @@ export const m ={
         update_failed:'更新资料失败',
     },
     table:{
+        name:'无标题',
+        save_to_cloud:'文件成功保存到云端',
+        brand:'企业版新功能免费使用，先到先得！',
+        autosave_success:'自动保存成功 .',
+        autosave_failed:'自动保存失败 ..',
+        autosaving:'自动保存中 ...',
+        update:{
+            title:'请确定文件名',
+            label:'文件名',
+            cancel:'取消',
+            submit:'提交',
+            update:'更新表格',
+        },
+        file:{
+            title:'文件',
+            save:'保存',
+            export:'导出',
+            clear:'清空',
+        },
         insert:{
             title:'插入',
             column:'列',
@@ -75,8 +114,39 @@ export const m ={
             time:'时间',
             checkbox:'复选框',
         },
+        language:{
+            title:'语言',
+            center:'中文',
+            service:'English'
+        },
     },
-
+    desktop:{
+        my_desktop:'我的桌面',
+        welcome:'欢迎来到桌面，但是真的没有文件了。',
+        alert:'警告！',
+        alert_content:'移动到回收站的文件短期内不会彻底删除，您可以在回收站恢复或者彻底删除此文件！',
+        dialog_cancel_button:'我在想想',
+        dialog_delete_button:'确定删除',
+        edit_button:'编辑',
+        delete_button:'删除',
+        delete_success:'删除成功',
+        get_my_sheet_failed:'获取表格失败',
+        delete_failed:'删除表格失败',
+    },
+    trash:{
+        trash_title:'回收站',
+        welcome:'欢迎来到回收站，但是真的没有文件了!',
+        restore:'恢复文件',
+        destroy:'彻底删除',
+        clear:'清空回收站',
+        load_failed:'加载失败',
+        destroy_success:'删除成功',
+        destroy_failed:'删除失败',
+        clear_success:'清空回收站成功',
+        clear_failed:'清空回收站失败',
+        restore_success:'恢复文件成功',
+        restore_failed:'恢复文件失败',
+    },
 
 
 };

@@ -13,7 +13,7 @@ class CreateTablesTable extends Migration
      */
     public function up()
     {
-        Schema::create('sheets', function (Blueprint $table) {
+        Schema::create('tables', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('user_id');
             $table->string('name')->comment('表格名称');

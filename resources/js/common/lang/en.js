@@ -46,6 +46,26 @@ export const m = {
             login:'login',
             desktop_button:'desktop'
         },
+        navigation_drawer:{
+            desktop:'Desktop',
+            sheets:{
+                text:'Table',
+                new:'New Table',
+                recent :'Recent',
+                collection:'My Collection',
+                deleted:'Recycle Bin'
+            },
+            more:{
+                text:'More',
+                import:'Import Table',
+                export:'Export Table',
+            },
+            settings:'Settings',
+            feedback:'FeedBack',
+            help:'Help Docs',
+            contact:'Contact Us',
+            change_language:'Change Language'
+        },
     },
     profile:{
         name_label:'Name',
@@ -57,6 +77,25 @@ export const m = {
         update_failed:'updated profile failed',
     } ,
     table:{
+        name:'untitled',
+        save_to_cloud:'The file has been saved to the cloud.',
+        brand:'Enterprise version of the new features for free use, first come first served!',
+        autosave_success:'Auto save succeeded .',
+        autosave_failed:'Auto save failed !',
+        autosaving:'Auto saving ...',
+        update:{
+            title:'Please confirm file name',
+            label:'file name',
+            cancel:'cancel',
+            submit:'submit',
+            update:'update',
+        },
+        file:{
+            title:'file',
+            save:'save',
+            export:'export',
+            clear:'clear',
+        },
         insert:{
             title:'insert',
             column:'column',
@@ -79,9 +118,39 @@ export const m = {
             date:'date',
             time:'time',
             checkbox:'checkbox',
-
+        },
+        language:{
+            title:'Language',
+            center:'中文',
+            service:'English'
         },
     },
+    desktop:{
+        my_desktop:'My Desktop',
+        welcome:'Welcome to Desktop,but there is no files.',
+        alert:'Alert！',
+        alert_content:'The Files which moved to the recycle bin will not be completely deleted in a short time. You can recover or completely delete this file in the recycle bin!',
+        dialog_cancel_button:'Cancel',
+        dialog_delete_button:'Confirm',
+        edit_button:'Edit',
+        delete_button:'Delete',
+        delete_success:'Deleted Success',
+        get_my_sheet_failed:'Get sheet data failed.',
+        delete_failed:'Delete sheet files failed.',
 
-
+    },
+    trash:{
+        trash_title:'Recycle Bin',
+        welcome:'Welcome to the recycle bin, but there are no documents!',
+        restore:'Restore files',
+        destroy:'Delete thoroughly',
+        clear:'Clear recycle bin',
+        load_failed:'load list failed',
+        destroy_success:'delete file success',
+        destroy_failed:'delete file failed',
+        clear_success:'clear recycle bin success',
+        clear_failed:'clear recycle bin failed',
+        restore_success:'restore file success',
+        restore_failed:'restore file failed',
+    },
 };

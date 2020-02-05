@@ -41,9 +41,21 @@ Route::prefix('v1')
             Route::patch('user', 'UsersController@update')
                 ->name('user.update');
             // 表格集合资源
-            Route::resource('sheets', 'SheetsController')->only([
+            Route::resource('tables', 'TablesController')->only([
                 'index','show','store', 'update', 'destroy'
             ]);
+            // 回收站
+            Route::get('trash', 'TablesController@trashIndex')
+                ->name('trash.show');
+            // 删除回收站某个文件
+            Route::delete('trash/{trash}', 'TablesController@trashDelete')
+                ->name('trash.trash.delete');
+            // 清空回收站
+            Route::post('trash', 'TablesController@trashDeleteAll')
+                ->name('trash.trash.delete.all');
+            // 恢复回收站某个文件
+            Route::patch('trash/{trash}', 'TablesController@trashRestore')
+                ->name('trash.trash.restore');
         });
     });
 

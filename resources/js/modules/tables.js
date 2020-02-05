@@ -21,6 +21,10 @@ export const tables = {
         myTable:'',
         updateMyTableStatus:0,
         deleteMyTableStatus:0,
+        myTrash:'',
+        clearMyTrashStatus:0,
+        deleteMyTrashStatus:0,
+        restoreMyTrashStatus:0,
     },
     /**
      * Defines the actions used to retrieve the data.
@@ -49,7 +53,7 @@ export const tables = {
             HyperCellAPI.getMyTables(data)
                 .then( function( response ){
                     commit( 'setGetMyTablesStatus', 2 );
-                    commit( 'setMyTables', response.data.data );
+                    commit( 'setMyTables', response.data);
 
                 })
                 .catch( function(error){
@@ -108,6 +112,71 @@ export const tables = {
                     // }
                 });
         },
+        getMyTrash( { commit },data ){
+            commit( 'setGetMyTrashStatus', 1 );
+
+            HyperCellAPI.getMyTrash(data)
+                .then( function( response ){
+                    commit( 'setGetMyTrashStatus', 2 );
+                    commit( 'setMyTrash', response.data);
+                })
+                .catch( function(error){
+                    commit( 'setGetMyTrashStatus', 3 );
+                    // if(typeof error.response.data.errors === "undefined"){
+                    //     commit( 'setSaveSheetErrors',error.response.data.message);
+                    // }else{
+                    //     commit( 'setSaveSheetErrors', error.response.data.errors[Object.keys(error.response.data.errors)[0]].toString() );
+                    // }
+                });
+        },
+        deleteMyTrash( { commit },data ){
+            commit( 'setDeleteMyTrashStatus', 1 );
+            HyperCellAPI.deleteTrash(data)
+                .then( function( response ){
+                    commit( 'setDeleteMyTrashStatus', 2 );
+                })
+                .catch( function(error){
+                    commit( 'setDeleteMyTrashStatus', 3 );
+                    // if(typeof error.response.data.errors === "undefined"){
+                    //     commit( 'setSaveSheetErrors',error.response.data.message);
+                    // }else{
+                    //     commit( 'setSaveSheetErrors', error.response.data.errors[Object.keys(error.response.data.errors)[0]].toString() );
+                    // }
+                });
+        },
+        clearMyTrash( { commit },data ){
+            commit( 'setClearMyTrashStatus', 1 );
+            HyperCellAPI.clearTrash(data)
+                .then( function( response ){
+                    commit( 'setClearMyTrashStatus', 2 );
+                })
+                .catch( function(error){
+                    commit( 'setClearMyTrashStatus', 3 );
+                    // if(typeof error.response.data.errors === "undefined"){
+                    //     commit( 'setSaveSheetErrors',error.response.data.message);
+                    // }else{
+                    //     commit( 'setSaveSheetErrors', error.response.data.errors[Object.keys(error.response.data.errors)[0]].toString() );
+                    // }
+                });
+        },
+        restoreMyTrash( { commit },data ){
+            commit( 'setRestoreMyTrashStatus', 1 );
+            HyperCellAPI.restoreTrash(data)
+                .then( function( response ){
+                    commit( 'setRestoreMyTrashStatus', 2 );
+                })
+                .catch( function(error){
+                    commit( 'setRestoreMyTrashStatus', 3 );
+                    // if(typeof error.response.data.errors === "undefined"){
+                    //     commit( 'setSaveSheetErrors',error.response.data.message);
+                    // }else{
+                    //     commit( 'setSaveSheetErrors', error.response.data.errors[Object.keys(error.response.data.errors)[0]].toString() );
+                    // }
+                });
+        },
+        resetMyTrashState( { commit }){
+            commit( 'setMyTrash','');
+        },
     },
     /**
      * Defines the mutations used
@@ -139,6 +208,21 @@ export const tables = {
         },
         setDeleteMyTableStatus( state, status ){
             state.deleteMyTableStatus = status;
+        },
+        setMyTrash( state, data){
+            state.myTrash = data;
+        },
+        setGetMyTrashStatus( state, status ){
+            state.getMyTrashStatus = status;
+        },
+        setDeleteMyTrashStatus( state, status ){
+            state.deleteMyTrashStatus = status;
+        },
+        setClearMyTrashStatus( state, status ){
+            state.clearMyTrashStatus = status;
+        },
+        setRestoreMyTrashStatus( state, status ){
+            state.restoreMyTrashStatus = status;
         },
     },
     /**
@@ -184,6 +268,33 @@ export const tables = {
         getDeleteMyTableStatus( state ){
             return function(){
                 return state.deleteMyTableStatus;
+            }
+
+        },
+        getMyTrash( state){
+            return state.myTrash;
+        },
+        getGetMyTrashStatus( state ){
+            return function(){
+                return state.getMyTrashStatus;
+            }
+
+        },
+        getDeleteMyTrashStatus( state ){
+            return function(){
+                return state.deleteMyTrashStatus;
+            }
+
+        },
+        getClearMyTrashStatus( state ){
+            return function(){
+                return state.clearMyTrashStatus;
+            }
+
+        },
+        getRestoreMyTrashStatus( state ){
+            return function(){
+                return state.restoreMyTrashStatus;
             }
 
         },

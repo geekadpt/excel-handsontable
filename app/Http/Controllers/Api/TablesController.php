@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Table;
-use function GuzzleHttp\Psr7\str;
 use Illuminate\Http\Request;
 use App\Http\Resources\TableResource;
 use App\Http\Requests\Api\TableRequest;
@@ -13,7 +12,7 @@ use Illuminate\Support\Str;
 class TablesController extends Controller
 {
     //
-    public function store(TableRequest $request, Table $sheet)
+    public function store(TableRequest $request, Table $table)
     {
         //dd($request->data);
         //$header = implode(",",$request->header);
@@ -21,50 +20,86 @@ class TablesController extends Controller
         $merge = \GuzzleHttp\json_encode($request->merge);
         $cell =  \GuzzleHttp\json_encode($request->cell);
         $column =  \GuzzleHttp\json_encode($request->column);
-        $sheet = new Table;
-        $sheet->name = $request->name;
-        //$sheet->header = $header;
-        $sheet->data = $data;
-        $sheet->merge = $merge;
-        $sheet->cell = $cell;
-        $sheet->column = $column;
-        $sheet->user_id = $request->user()->id;
-        $sheet->save();
-        return new TableResource($sheet);
+        $table = new Table;
+        $table->name = $request->name;
+        //$table->header = $header;
+        $table->data = $data;
+        $table->merge = $merge;
+        $table->cell = $cell;
+        $table->column = $column;
+        $table->user_id = $request->user()->id;
+        $table->save();
+        return new TableResource($table);
     }
-    public function show(Table $sheet){
-        return new TableResource($sheet);
+    public function show(Table $table){
+        return new TableResource($table);
     }
     public function index(Request $request){
-        return TableResource::collection($request->user()->sheet()->orderBy('updated_at','desc')->get());
+        return TableResource::collection($request->user()->table()->orderBy('updated_at','desc')->get());
     }
-    public function update(TableRequest $request, Table $sheet)
+    public function update(TableRequest $request, Table $table)
     {
-        $this->authorize('update', $sheet);
+        $this->authorize('update', $table);
         $data = \GuzzleHttp\json_encode($request->data);
         $merge = \GuzzleHttp\json_encode($request->merge);
         $cell =  \GuzzleHttp\json_encode($request->cell);
         $column =  \GuzzleHttp\json_encode($request->column);
-        $sheet->name = $request->name;
-        //$sheet->header = $header;
-        $sheet->data = $data;
-        $sheet->merge = $merge;
-        $sheet->cell = $cell;
-        $sheet->column = $column;
-        $sheet->update();
-        return new TableResource($sheet);
+        $table->name = $request->name;
+        //$table->header = $header;
+        $table->data = $data;
+        $table->merge = $merge;
+        $table->cell = $cell;
+        $table->column = $column;
+        $table->update();
+        return new TableResource($table);
     }
-    public function destroy(Table $sheet)
+    public function destroy(Table $table)
     {
-        $this->authorize('destroy', $sheet);
+        $this->authorize('destroy', $table);
 
-        $sheet->delete();
+        $table->delete();
 
-        if($sheet->trashed()){
+        if($table->trashed()){
             return response(null, 204);
         }else{
             return '软删除失败！';
         }
+    }
+    public function trashIndex(Request $request)
+    {
+        return TableResource::collection($request->user()->table()->onlyTrashed()->get());
+    }
+    public function trashDelete(Request $request, $id)    {
+        $table = $request->user()->table()->onlyTrashed()->find($id);
+        if($request->user()->id == $table->user_id && $table->forceDelete()){
+            return response(null, 204);
+        }else{
+            return '彻底删除文件失败！';
+        }
+
+    }
+    public function trashDeleteAll(Request $request)    {
+
+        try {
+            $table = $request->user()->table()->onlyTrashed();
+            if($table->forceDelete()){
+                abort(204, '清空回收站成功！');
+            }else{
+                abort(403, '清空回收站失败！');
+            }
+        }catch (Exception $e) {
+            abort(403, '清空回收站失败！');
+        }
+    }
+    public function trashRestore(Request $request, $id)    {
+
+        $table = $request->user()->table()->onlyTrashed()->find($id);
+        if($request->user()->id == $table->user_id && $table->restore()){
+            return response(null, 204);
+        }else{
+            return '恢复文件失败！';
+        }
+
     }
 }
 

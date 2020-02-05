@@ -48,4 +48,28 @@ export default {
     deleteTable: function(data){
         return axios.delete( HYPERCELL_CONFIG.API_URL + '/tables/'+data.table_id);
     },
+    /**
+     * GET /api/v1/trash
+     */
+    getMyTrash: function(){
+        return axios.get( HYPERCELL_CONFIG.API_URL + '/trash');
+    },
+    /**
+     * DELETE /api/v1/trash/{id}
+     */
+    deleteTrash: function(data){
+        return axios.delete( HYPERCELL_CONFIG.API_URL + '/trash/'+data.sheet_id);
+    },
+    /**
+     * POST /api/v1/trash
+     */
+    clearTrash: function(){
+        return axios.post( HYPERCELL_CONFIG.API_URL + '/trash');
+    },
+    /**
+     * PATCH /api/v1/trash/{id}
+     */
+    restoreTrash: function(data){
+        return axios.patch( HYPERCELL_CONFIG.API_URL + '/trash/'+data.sheet_id);
+    },
 }
