@@ -1,319 +1,384 @@
 <template >
-    <div>
-        <template>
-            <div>
-                <v-card
-                        class="d-flex justify-space-between"
-                >
-                    <div
-
+    <div class="padding-bottom-nav">
+        <div class="fixed-menu-fun ">
+            <template>
+                <div>
+                    <v-card
+                            class="d-flex justify-space-between"
                     >
-                        <template>
-                            <v-chip
-                                    class="ma-2"
-                                    :color="autosave.color"
-                                    small
-                                    text-color="white"
+                        <div
+
+                        >
+                            <template>
+                                <v-chip
+                                        class="ma-2"
+                                        :color="autosave.color"
+                                        small
+                                        text-color="white"
+                                >
+                                    <i class="material-icons">autorenew</i>
+                                    {{autosave.message}}
+                                </v-chip>
+                            </template>
+                        </div>
+                        <div>
+                            <v-list-item
+                                    class="adjust-brand"
                             >
-                                <i class="material-icons">autorenew</i>
-                                {{autosave.message}}
-                            </v-chip>
+                                <v-list-item-action>
+                                    <i class="material-icons">import_contacts</i>
+                                </v-list-item-action>
+                                <v-list-item-content>
+                                    <v-list-item-title>
+                                        {{$t('m.table.brand')}}
+                                    </v-list-item-title>
+                                </v-list-item-content>
+                            </v-list-item>
+                        </div>
+                        <div
+                                class="ma-2"
+                        >
+                            <template>
+                                <div class="text-center">
+                                    <v-menu
+                                            v-model="menu_share"
+                                            :close-on-content-click="false"
+                                            :nudge-width="200"
+                                            offset-x
+                                    >
+                                        <template v-slot:activator="{ on }">
+                                            <v-btn depressed small v-on="on"><i class="material-icons">share</i></v-btn>
+                                        </template>
+
+                                        <v-card>
+                                            <v-list>
+                                                <v-list-item>
+                                                    <v-list-item-avatar>
+                                                        <v-avatar color="indigo" v-if="!user.avatar">
+                                                            <v-icon dark>mdi-account-circle</v-icon>
+                                                        </v-avatar>
+                                                        <img v-if="user.avatar" :src="user.avatar" alt="John">
+                                                    </v-list-item-avatar>
+
+                                                    <v-list-item-content>
+                                                        <v-list-item-title>{{user.name}}</v-list-item-title>
+                                                        <v-list-item-subtitle>{{user.introduction}}</v-list-item-subtitle>
+                                                    </v-list-item-content>
+                                                </v-list-item>
+                                            </v-list>
+                                            <template>
+                                                <div class="text-center">
+                                                    <v-chip
+                                                            class="ma-2"
+                                                            color="indigo darken-3"
+                                                            outlined
+                                                    >
+                                                        <v-icon left>mdi-fire</v-icon>
+                                                        {{app_url+'/#/share/'+table_id}}
+                                                    </v-chip>
+                                                </div>
+                                            </template>
+
+                                            <v-list>
+                                                <v-list-item>
+                                                    <v-list-item-action>
+                                                        <v-switch v-model="share" color="purple" disabled></v-switch>
+                                                    </v-list-item-action>
+                                                    <v-list-item-title>{{$t('m.table.share.switch')}}</v-list-item-title>
+                                                </v-list-item>
+                                            </v-list>
+
+                                            <v-card-actions>
+                                                <v-spacer></v-spacer>
+
+                                                <v-btn text @click="menu_share = false">{{$t('m.table.share.cancel')}}</v-btn>
+                                                <v-btn color="primary" text @click="updatetableShareStatus">{{$t('m.table.share.update')}}</v-btn>
+                                            </v-card-actions>
+                                        </v-card>
+                                    </v-menu>
+                                </div>
+                            </template>
+                        </div>
+                    </v-card>
+                </div>
+            </template>
+            <v-divider></v-divider>
+            <template>
+                <v-card class="text-left pa-2">
+                    <v-menu open-on-hover bottom offset-y>
+                        <template v-slot:activator="{ on }">
+                            <v-btn
+                                    text
+                                    small
+                                    v-on="on"
+                            >
+                                {{$t('m.table.file.title')}}
+                            </v-btn>
                         </template>
-                    </div>
-                    <div>
-                        <v-list-item
-                                class="adjust-brand"
-                        >
-                            <v-list-item-action>
-                                <i class="material-icons">import_contacts</i>
-                            </v-list-item-action>
-                            <v-list-item-content>
-                                <v-list-item-title>
-                                    {{$t('m.table.brand')}}
-                                </v-list-item-title>
-                            </v-list-item-content>
-                        </v-list-item>
-                    </div>
+
+                        <v-list>
+
+                            <v-list-item
+                                    @click="dialog_update=true"
+                            >
+                                <v-list-item-action>
+                                    <i class="material-icons">save</i>
+                                </v-list-item-action>
+
+                                <v-list-item-content>
+                                    <v-list-item-title>
+                                        {{$t('m.table.file.save')}}
+                                    </v-list-item-title>
+                                </v-list-item-content>
+                            </v-list-item>
+
+                            <v-list-item
+                                    @click="exportTable"
+                            >
+                                <v-list-item-action>
+                                    <i class="material-icons">file_download</i>
+                                </v-list-item-action>
+                                <v-list-item-title> {{$t('m.table.file.export')}}</v-list-item-title>
+                            </v-list-item>
+
+                            <v-list-item
+                                    @click="clearTable"
+                            >
+                                <v-list-item-action>
+                                    <i class="material-icons">close</i>
+                                </v-list-item-action>
+                                <v-list-item-title> {{$t('m.table.file.clear')}}</v-list-item-title>
+                            </v-list-item>
+                        </v-list>
+                    </v-menu>
+                    <v-menu open-on-hover bottom offset-y>
+                        <template v-slot:activator="{ on }">
+                            <v-btn
+                                    text
+                                    small
+                                    v-on="on"
+                            >
+                                {{$t('m.table.insert.title')}}
+                            </v-btn>
+                        </template>
+
+                        <v-list>
+                            <v-list-item
+                                    @click="prepareSetComment"
+                            >
+                                <v-list-item-action>
+                                    <i class="material-icons">comment</i>
+                                </v-list-item-action>
+                                <v-list-item-title> {{$t('m.table.insert.comment')}}</v-list-item-title>
+                            </v-list-item>
+
+
+                            <v-list-item
+                                    @click="insertColumnRight"
+                            >
+                                <v-list-item-action>
+                                    <i class="material-icons">view_column</i>
+                                </v-list-item-action>
+                                <v-list-item-title>{{$t('m.table.insert.column')}}</v-list-item-title>
+                            </v-list-item>
+                            <v-list-item
+                                    @click="insertRowBottom"
+                            >
+                                <v-list-item-action>
+                                    <i class="material-icons">view_headline</i>
+                                </v-list-item-action>
+                                <v-list-item-title>{{$t('m.table.insert.row')}}</v-list-item-title>
+                            </v-list-item>
+                        </v-list>
+                    </v-menu>
+                    <v-menu open-on-hover bottom offset-y>
+                        <template v-slot:activator="{ on }">
+                            <v-btn
+                                    text
+                                    small
+                                    v-on="on"
+                            >
+                                {{$t('m.table.format.title')}}
+                            </v-btn>
+                        </template>
+                        <v-list>
+                            <v-list-item
+                                    v-for="(item, index) in formatItems"
+                                    :key="index"
+                                    @click="changeCellType(index)"
+                            >
+                                <v-list-item-title>{{ item.title }}</v-list-item-title>
+                            </v-list-item>
+                        </v-list>
+                    </v-menu>
+                    <v-menu open-on-hover bottom offset-y>
+                        <template v-slot:activator="{ on }">
+                            <v-btn
+                                    text
+                                    small
+                                    v-on="on"
+                            >
+                                {{$t('m.table.language.title')}}
+                            </v-btn>
+                        </template>
+
+                        <v-list>
+                            <v-list-item
+                                    @click="changeLangToZhCN"
+                            >
+                                <v-list-item-action>
+                                    <i class="material-icons">language</i>
+                                </v-list-item-action>
+                                <v-list-item-title>{{$t('m.table.language.center')}}</v-list-item-title>
+                            </v-list-item>
+                            <v-list-item
+                                    @click="changeLangToEnUS"
+                            >
+                                <v-list-item-action>
+                                    <i class="material-icons">language</i>
+                                </v-list-item-action>
+                                <v-list-item-title>{{$t('m.table.language.service')}}</v-list-item-title>
+                            </v-list-item>
+
+                        </v-list>
+                    </v-menu>
                 </v-card>
-            </div>
-        </template>
-        <v-divider></v-divider>
-        <template>
-            <v-card class="text-left pa-2">
-                <v-menu open-on-hover bottom offset-y>
-                    <template v-slot:activator="{ on }">
-                        <v-btn
-                                text
-                                small
-                                v-on="on"
-                        >
-                            {{$t('m.table.file.title')}}
-                        </v-btn>
-                    </template>
+            </template>
+            <v-divider></v-divider>
+            <template>
+                <v-card class="pa-2">
+                    <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                            <v-btn depressed small v-on="on" @click="insertColumnRight"><i class="material-icons">view_column</i></v-btn>
+                        </template>
+                        <span>{{$t('m.table.insert.column')}}</span>
+                    </v-tooltip>
+                    <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                            <v-btn depressed small v-on="on" @click="insertRowBottom"><i class="material-icons">view_headline</i></v-btn>
+                        </template>
+                        <span>{{$t('m.table.insert.row')}}</span>
+                    </v-tooltip>
+                    <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                            <v-btn  depressed small v-on="on" @click="changeCellType(0)"><i class="material-icons">format_color_text</i></v-btn>
+                        </template>
+                        <span>{{$t('m.table.format.text')}}</span>
+                    </v-tooltip>
+                    <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                            <v-btn depressed small v-on="on" @click="changeCellType(1)"><i class="material-icons">view_list</i></v-btn>
+                        </template>
+                        <span>{{$t('m.table.format.numeric')}}</span>
+                    </v-tooltip>
+                    <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                            <v-btn depressed small v-on="on" @click="changeCellType(2)"><i class="material-icons">view_list</i></v-btn>
+                        </template>
+                        <span>{{$t('m.table.format.numeric_dot')}}</span>
+                    </v-tooltip>
+                    <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                            <v-btn depressed small v-on="on" @click="changeCellType(3)"><i class="material-icons">money_off</i></v-btn>
+                        </template>
+                        <span>{{$t('m.table.format.price')}}</span>
+                    </v-tooltip>
+                    <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                            <v-btn depressed small v-on="on" @click="changeCellType(4)"><i class="material-icons">attach_money</i></v-btn>
+                        </template>
+                        <span>{{$t('m.table.format.price_dot')}}</span>
+                    </v-tooltip>
+                    <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                            <v-btn depressed small v-on="on" @click="changeCellType(5)"><i class="material-icons">date_range</i></v-btn>
+                        </template>
+                        <span>{{$t('m.table.format.date')}}</span>
+                    </v-tooltip>
+                    <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                            <v-btn depressed small v-on="on" @click="changeCellType(6)"><i class="material-icons">access_time</i></v-btn>
+                        </template>
+                        <span>{{$t('m.table.format.time')}}</span>
+                    </v-tooltip>
+                    <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                            <v-btn depressed small v-on="on" @click="changeCellType(7)"><i class="material-icons">check_circle</i></v-btn>
+                        </template>
+                        <span>{{$t('m.table.format.checkbox')}}</span>
+                    </v-tooltip>
+                    <v-menu open-on-hover bottom offset-y>
+                        <template v-slot:activator="{ on }">
+                            <v-btn depressed small v-on="on" @click="supcell"><i class="material-icons">functions</i></v-btn>
+                        </template>
 
-                    <v-list>
-
-                        <v-list-item
-                                @click="dialog_update=true"
-                        >
-                            <v-list-item-action>
-                                <i class="material-icons">save</i>
-                            </v-list-item-action>
-
-                            <v-list-item-content>
-                                <v-list-item-title>
-                                    {{$t('m.table.file.save')}}
-                                </v-list-item-title>
-                            </v-list-item-content>
-                        </v-list-item>
-
-                        <v-list-item
-                                @click="exportTable"
-                        >
-                            <v-list-item-action>
-                                <i class="material-icons">file_download</i>
-                            </v-list-item-action>
-                            <v-list-item-title> {{$t('m.table.file.export')}}</v-list-item-title>
-                        </v-list-item>
-
-                        <v-list-item
-                                @click="clearTable"
-                        >
-                            <v-list-item-action>
-                                <i class="material-icons">close</i>
-                            </v-list-item-action>
-                            <v-list-item-title> {{$t('m.table.file.clear')}}</v-list-item-title>
-                        </v-list-item>
-                    </v-list>
-                </v-menu>
-                <v-menu open-on-hover bottom offset-y>
-                    <template v-slot:activator="{ on }">
-                        <v-btn
-                                text
-                                small
-                                v-on="on"
-                        >
-                            {{$t('m.table.insert.title')}}
-                        </v-btn>
-                    </template>
-
-                    <v-list>
-                        <v-list-item
-                                @click="prepareSetComment"
-                        >
-                            <v-list-item-action>
-                                <i class="material-icons">comment</i>
-                            </v-list-item-action>
-                            <v-list-item-title> {{$t('m.table.insert.comment')}}</v-list-item-title>
-                        </v-list-item>
-
-
-                        <v-list-item
-                                @click="insertColumnRight"
-                        >
-                            <v-list-item-action>
-                                <i class="material-icons">view_column</i>
-                            </v-list-item-action>
-                            <v-list-item-title>{{$t('m.table.insert.column')}}</v-list-item-title>
-                        </v-list-item>
-                        <v-list-item
-                                @click="insertRowBottom"
-                        >
-                            <v-list-item-action>
-                                <i class="material-icons">view_headline</i>
-                            </v-list-item-action>
-                            <v-list-item-title>{{$t('m.table.insert.row')}}</v-list-item-title>
-                        </v-list-item>
-                    </v-list>
-                </v-menu>
-                <v-menu open-on-hover bottom offset-y>
-                    <template v-slot:activator="{ on }">
-                        <v-btn
-                                text
-                                small
-                                v-on="on"
-                        >
-                            {{$t('m.table.format.title')}}
-                        </v-btn>
-                    </template>
-                    <v-list>
-                        <v-list-item
-                                v-for="(item, index) in formatItems"
-                                :key="index"
-                                @click="changeCellType(index)"
-                        >
-                            <v-list-item-title>{{ item.title }}</v-list-item-title>
-                        </v-list-item>
-                    </v-list>
-                </v-menu>
-                <v-menu open-on-hover bottom offset-y>
-                    <template v-slot:activator="{ on }">
-                        <v-btn
-                                text
-                                small
-                                v-on="on"
-                        >
-                            {{$t('m.table.language.title')}}
-                        </v-btn>
-                    </template>
-
-                    <v-list>
-                        <v-list-item
-                                @click="changeLangToZhCN"
-                        >
-                            <v-list-item-action>
-                                <i class="material-icons">language</i>
-                            </v-list-item-action>
-                            <v-list-item-title>{{$t('m.table.language.center')}}</v-list-item-title>
-                        </v-list-item>
-                        <v-list-item
-                                @click="changeLangToEnUS"
-                        >
-                            <v-list-item-action>
-                                <i class="material-icons">language</i>
-                            </v-list-item-action>
-                            <v-list-item-title>{{$t('m.table.language.service')}}</v-list-item-title>
-                        </v-list-item>
-
-                    </v-list>
-                </v-menu>
-            </v-card>
-        </template>
-
-        <v-divider></v-divider>
-        <template>
-            <v-card class="pa-2">
-                <v-tooltip bottom>
-                    <template v-slot:activator="{ on }">
-                        <v-btn depressed small v-on="on" @click="insertColumnRight"><i class="material-icons">view_column</i></v-btn>
-                    </template>
-                    <span>{{$t('m.table.insert.column')}}</span>
-                </v-tooltip>
-                <v-tooltip bottom>
-                    <template v-slot:activator="{ on }">
-                        <v-btn depressed small v-on="on" @click="insertRowBottom"><i class="material-icons">view_headline</i></v-btn>
-                    </template>
-                    <span>{{$t('m.table.insert.row')}}</span>
-                </v-tooltip>
-                <v-tooltip bottom>
-                    <template v-slot:activator="{ on }">
-                        <v-btn  depressed small v-on="on" @click="changeCellType(0)"><i class="material-icons">format_color_text</i></v-btn>
-                    </template>
-                    <span>{{$t('m.table.format.text')}}</span>
-                </v-tooltip>
-                <v-tooltip bottom>
-                    <template v-slot:activator="{ on }">
-                        <v-btn depressed small v-on="on" @click="changeCellType(1)"><i class="material-icons">view_list</i></v-btn>
-                    </template>
-                    <span>{{$t('m.table.format.numeric')}}</span>
-                </v-tooltip>
-                <v-tooltip bottom>
-                    <template v-slot:activator="{ on }">
-                        <v-btn depressed small v-on="on" @click="changeCellType(2)"><i class="material-icons">view_list</i></v-btn>
-                    </template>
-                    <span>{{$t('m.table.format.numeric_dot')}}</span>
-                </v-tooltip>
-                <v-tooltip bottom>
-                    <template v-slot:activator="{ on }">
-                        <v-btn depressed small v-on="on" @click="changeCellType(3)"><i class="material-icons">money_off</i></v-btn>
-                    </template>
-                    <span>{{$t('m.table.format.price')}}</span>
-                </v-tooltip>
-                <v-tooltip bottom>
-                    <template v-slot:activator="{ on }">
-                        <v-btn depressed small v-on="on" @click="changeCellType(4)"><i class="material-icons">attach_money</i></v-btn>
-                    </template>
-                    <span>{{$t('m.table.format.price_dot')}}</span>
-                </v-tooltip>
-                <v-tooltip bottom>
-                    <template v-slot:activator="{ on }">
-                        <v-btn depressed small v-on="on" @click="changeCellType(5)"><i class="material-icons">date_range</i></v-btn>
-                    </template>
-                    <span>{{$t('m.table.format.date')}}</span>
-                </v-tooltip>
-                <v-tooltip bottom>
-                    <template v-slot:activator="{ on }">
-                        <v-btn depressed small v-on="on" @click="changeCellType(6)"><i class="material-icons">access_time</i></v-btn>
-                    </template>
-                    <span>{{$t('m.table.format.time')}}</span>
-                </v-tooltip>
-                <v-tooltip bottom>
-                    <template v-slot:activator="{ on }">
-                        <v-btn depressed small v-on="on" @click="changeCellType(7)"><i class="material-icons">check_circle</i></v-btn>
-                    </template>
-                    <span>{{$t('m.table.format.checkbox')}}</span>
-                </v-tooltip>
-                <v-menu open-on-hover bottom offset-y>
-                    <template v-slot:activator="{ on }">
-                        <v-btn depressed small v-on="on" @click="supcell"><i class="material-icons">functions</i></v-btn>
-                    </template>
-
-                    <v-list>
-                        <v-list-item
-                                @click="formula('sum')"
-                        >
-                            <v-list-item-title>SUM</v-list-item-title>
-                        </v-list-item>
-                        <v-list-item
-                                @click="formula('average')"
-                        >
-                            <v-list-item-title>AVERAGE</v-list-item-title>
-                        </v-list-item>
-                        <v-list-item
-                                @click="formula('max')"
-                        >
-                            <v-list-item-title>MAX</v-list-item-title>
-                        </v-list-item>
-                        <v-list-item
-                                @click="formula('min')"
-                        >
-                            <v-list-item-title>MIN</v-list-item-title>
-                        </v-list-item>
-                        <v-list-item
-                                @click="formula('and')"
-                        >
-                            <v-list-item-title>AND</v-list-item-title>
-                        </v-list-item>
-                        <v-list-item
-                                @click="formula('count')"
-                        >
-                            <v-list-item-title>COUNT</v-list-item-title>
-                        </v-list-item>
-                        <v-list-item
-                                @click="formula('accrint')"
-                        >
-                            <v-list-item-title>ACCRINT</v-list-item-title>
-                        </v-list-item>
-                        <v-list-item
-                                @click="formula('BAHTTEXT')"
-                        >
-                            <v-list-item-title>BAHTTEXT</v-list-item-title>
-                        </v-list-item>
-                        <v-list-item
-                                @click="formula('Date')"
-                        >
-                            <v-list-item-title>DATE</v-list-item-title>
-                        </v-list-item>
-                        <v-list-item
-                                @click="formula('ADDRESS')"
-                        >
-                            <v-list-item-title>ADDRESS</v-list-item-title>
-                        </v-list-item>
-                        <v-list-item
-                                @click="formula('ABS')"
-                        >
-                            <v-list-item-title>ABS</v-list-item-title>
-                        </v-list-item>
-                    </v-list>
-                </v-menu>
-                <v-tooltip bottom>
-                    <template v-slot:activator="{ on }">
-                        <v-btn depressed small v-on="on" @click="prepareSetComment"><i class="material-icons">comment</i></v-btn>
-                    </template>
-                    <span>{{$t('m.table.insert.comment')}}</span>
-                </v-tooltip>
-            </v-card>
-        </template>
+                        <v-list>
+                            <v-list-item
+                                    @click="formula('sum')"
+                            >
+                                <v-list-item-title>SUM</v-list-item-title>
+                            </v-list-item>
+                            <v-list-item
+                                    @click="formula('average')"
+                            >
+                                <v-list-item-title>AVERAGE</v-list-item-title>
+                            </v-list-item>
+                            <v-list-item
+                                    @click="formula('max')"
+                            >
+                                <v-list-item-title>MAX</v-list-item-title>
+                            </v-list-item>
+                            <v-list-item
+                                    @click="formula('min')"
+                            >
+                                <v-list-item-title>MIN</v-list-item-title>
+                            </v-list-item>
+                            <v-list-item
+                                    @click="formula('and')"
+                            >
+                                <v-list-item-title>AND</v-list-item-title>
+                            </v-list-item>
+                            <v-list-item
+                                    @click="formula('count')"
+                            >
+                                <v-list-item-title>COUNT</v-list-item-title>
+                            </v-list-item>
+                            <v-list-item
+                                    @click="formula('accrint')"
+                            >
+                                <v-list-item-title>ACCRINT</v-list-item-title>
+                            </v-list-item>
+                            <v-list-item
+                                    @click="formula('BAHTTEXT')"
+                            >
+                                <v-list-item-title>BAHTTEXT</v-list-item-title>
+                            </v-list-item>
+                            <v-list-item
+                                    @click="formula('Date')"
+                            >
+                                <v-list-item-title>DATE</v-list-item-title>
+                            </v-list-item>
+                            <v-list-item
+                                    @click="formula('ADDRESS')"
+                            >
+                                <v-list-item-title>ADDRESS</v-list-item-title>
+                            </v-list-item>
+                            <v-list-item
+                                    @click="formula('ABS')"
+                            >
+                                <v-list-item-title>ABS</v-list-item-title>
+                            </v-list-item>
+                        </v-list>
+                    </v-menu>
+                    <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                            <v-btn depressed small v-on="on" @click="prepareSetComment"><i class="material-icons">comment</i></v-btn>
+                        </template>
+                        <span>{{$t('m.table.insert.comment')}}</span>
+                    </v-tooltip>
+                </v-card>
+            </template>
+        </div>
         <div id="hotTable" class="hotTable">
             <HotTable :root="root" ref="hypercell" :settings="hotSettings" ></HotTable>
         </div>
@@ -469,6 +534,12 @@
                     color:'',
                 },
 
+                menu_share: false,
+                share: false,
+                share_origin: false,
+                readonly: false,
+                // hints: true,
+                app_url:HYPERCELL_CONFIG.APP_URL,
             };
         },
         components: {
@@ -856,8 +927,32 @@
                 this.hotRef.clear();
 
             },
+            updatetableShareStatus(){
+                this.$store.dispatch('switchShare',{
+                    table_id : this.table_id
+                });
+                this.$watch(this.$store.getters.getShareSwitchStatus, function () {
+                    if (this.$store.getters.getShareSwitchStatus() === 2) {
+                        EventBus.$emit('open-message', {
+                            text: this.$t('m.table.share.switch_success')
+                        });
+                        //console.log(this.$store.getters.getShareSwitchResult === 0);
+                        this.share = this.$store.getters.getShareSwitchResult === 0 ? false : true;
+
+                    }
+                    if (this.$store.getters.getShareSwitchStatus() === 3) {
+                        EventBus.$emit('open-message', {
+                            text: this.$t('m.table.share.switch_failed')
+                        });
+                        return 0;
+                    }
+                });
+            },
         },
         computed:{
+            user(){
+                return this.$store.getters.getMyInfo;
+            },
             formatItems(){
                 return [
                     { title: this.$t('m.table.format.text') },
@@ -875,3 +970,18 @@
 
     }
 </script>
+<style type="scss" scoped>
+    .fixed-menu-fun{
+        position: fixed;
+        top:65px;
+        z-index: 1;
+        width: 100%;
+
+    }
+    #hotTable{
+        margin-top: 140px;
+    }
+    .padding-bottom-nav{
+        padding-bottom: 56px;
+    }
+</style>

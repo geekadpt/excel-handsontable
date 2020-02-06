@@ -25,6 +25,12 @@ export const tables = {
         clearMyTrashStatus:0,
         deleteMyTrashStatus:0,
         restoreMyTrashStatus:0,
+        shareSwitchStatus:0,
+        shareSwitchResult:false,
+        getShareTableStatus:0,
+        shareTable:'',
+        searchTable:'',
+        searchTableStatus:0
     },
     /**
      * Defines the actions used to retrieve the data.
@@ -123,9 +129,9 @@ export const tables = {
                 .catch( function(error){
                     commit( 'setGetMyTrashStatus', 3 );
                     // if(typeof error.response.data.errors === "undefined"){
-                    //     commit( 'setSaveSheetErrors',error.response.data.message);
+                    //     commit( 'setSaveTableErrors',error.response.data.message);
                     // }else{
-                    //     commit( 'setSaveSheetErrors', error.response.data.errors[Object.keys(error.response.data.errors)[0]].toString() );
+                    //     commit( 'setSaveTableErrors', error.response.data.errors[Object.keys(error.response.data.errors)[0]].toString() );
                     // }
                 });
         },
@@ -138,9 +144,9 @@ export const tables = {
                 .catch( function(error){
                     commit( 'setDeleteMyTrashStatus', 3 );
                     // if(typeof error.response.data.errors === "undefined"){
-                    //     commit( 'setSaveSheetErrors',error.response.data.message);
+                    //     commit( 'setSaveTableErrors',error.response.data.message);
                     // }else{
-                    //     commit( 'setSaveSheetErrors', error.response.data.errors[Object.keys(error.response.data.errors)[0]].toString() );
+                    //     commit( 'setSaveTableErrors', error.response.data.errors[Object.keys(error.response.data.errors)[0]].toString() );
                     // }
                 });
         },
@@ -153,9 +159,9 @@ export const tables = {
                 .catch( function(error){
                     commit( 'setClearMyTrashStatus', 3 );
                     // if(typeof error.response.data.errors === "undefined"){
-                    //     commit( 'setSaveSheetErrors',error.response.data.message);
+                    //     commit( 'setSaveTableErrors',error.response.data.message);
                     // }else{
-                    //     commit( 'setSaveSheetErrors', error.response.data.errors[Object.keys(error.response.data.errors)[0]].toString() );
+                    //     commit( 'setSaveTableErrors', error.response.data.errors[Object.keys(error.response.data.errors)[0]].toString() );
                     // }
                 });
         },
@@ -168,14 +174,64 @@ export const tables = {
                 .catch( function(error){
                     commit( 'setRestoreMyTrashStatus', 3 );
                     // if(typeof error.response.data.errors === "undefined"){
-                    //     commit( 'setSaveSheetErrors',error.response.data.message);
+                    //     commit( 'setSaveTableErrors',error.response.data.message);
                     // }else{
-                    //     commit( 'setSaveSheetErrors', error.response.data.errors[Object.keys(error.response.data.errors)[0]].toString() );
+                    //     commit( 'setSaveTableErrors', error.response.data.errors[Object.keys(error.response.data.errors)[0]].toString() );
                     // }
                 });
         },
         resetMyTrashState( { commit }){
             commit( 'setMyTrash','');
+        },
+        switchShare( { commit },data){
+            commit('setShareSwitchStatus',1);
+            HyperCellAPI.switchShare(data)
+                .then( function( response ){
+                    commit('setShareSwitchStatus',2);
+                    console.log(response.data);
+                    commit('setShareSwitchResult',response.data);
+
+                })
+                .catch( function(error){
+                    commit('setShareSwitchStatus',3);
+                    // if(typeof error.response.data.errors === "undefined"){
+                    //     commit( 'setSaveTableErrors',error.response.data.message);
+                    // }else{
+                    //     commit( 'setSaveTableErrors', error.response.data.errors[Object.keys(error.response.data.errors)[0]].toString() );
+                    // }
+                });
+        },
+        getShareTable( { commit },data){
+            commit('setGetShareTableStatus',1);
+            HyperCellAPI.getShare(data)
+                .then( function( response ){
+                    commit('setGetShareTableStatus',2);
+
+                    commit( 'setGetShareTable', response.data);
+                })
+                .catch( function(error){
+                    commit('setGetShareTableStatus',3);
+                    // if(typeof error.response.data.errors === "undefined"){
+                    //     commit( 'setSaveTableErrors',error.response.data.message);
+                    // }else{
+                    //     commit( 'setSaveTableErrors', error.response.data.errors[Object.keys(error.response.data.errors)[0]].toString() );
+                    // }
+                });
+        },
+        searchTable( { commit },data ){
+            commit( 'setSearchTableStatus', 1 );
+
+            HyperCellAPI.searchTable(data)
+                .then( function( response ){
+                    commit( 'setSearchTableStatus', 2 );
+                    commit( 'setSearchTable', response.data);
+                })
+                .catch( function(error){
+                    commit( 'setSearchTableStatus', 3 );
+                });
+        },
+        clearSearchTable( { commit } ){
+            commit( 'setSearchTable', '');
         },
     },
     /**
@@ -223,6 +279,24 @@ export const tables = {
         },
         setRestoreMyTrashStatus( state, status ){
             state.restoreMyTrashStatus = status;
+        },
+        setShareSwitchStatus( state, status){
+            state.shareSwitchStatus = status;
+        },
+        setShareSwitchResult( state, result){
+            state.shareSwitchResult= result;
+        },
+        setGetShareTable( state, data){
+            state.shareTable = data;
+        },
+        setGetShareTableStatus( state, status ){
+            state.getShareTableStatus= status;
+        },
+        setSearchTable( state, data){
+            state.searchTable = data;
+        },
+        setSearchTableStatus( state, status ){
+            state.searchTableStatus = status;
         },
     },
     /**
@@ -297,6 +371,30 @@ export const tables = {
                 return state.restoreMyTrashStatus;
             }
 
+        },
+        getShareSwitchResult( state){
+            return state.shareSwitchResult;
+        },
+        getShareSwitchStatus( state){
+            return function(){
+                return state.shareSwitchStatus;
+            }
+        },
+        getShareTable( state){
+            return state.shareTable;
+        },
+        getShareTableStatus( state ){
+            return function(){
+                return state.getShareTableStatus;
+            }
+        },
+        getSearchTable( state){
+            return state.searchTable ;
+        },
+        getSearchTableStatus( state ){
+            return function(){
+                return state.searchTableStatus;
+            }
         },
     }
 };

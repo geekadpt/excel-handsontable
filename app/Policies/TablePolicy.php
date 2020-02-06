@@ -28,4 +28,9 @@ class TablePolicy
     {
         return $user->id == $table->user_id;
     }
+
+    public function share(User $user, Table $table)
+    {
+        return $user->id == $table->user_id;
+    }
 }

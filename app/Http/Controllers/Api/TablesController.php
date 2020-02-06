@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\Api\SearchRequest;
 use App\Models\Table;
 use Illuminate\Http\Request;
 use App\Http\Resources\TableResource;
@@ -99,7 +100,33 @@ class TablesController extends Controller
         }else{
             return '恢复文件失败！';
         }
+    }
+    public function switchShare(Request $request, Table $table){
+        $this->authorize('destroy', $table);
+        $table->access = !$table->access;
+        $table->update();
+        if($table->access == true){
+            $result = 1;
+        }else{
+            $result = 0;
+        }
+        return $result;
+    }
+    public function showShare( Table $table){
+        if($table->access){
+            return new TableResource($table);
+        }else{
+            abort('401','no policy');
+        }
+    }
+    public function searchSheet(SearchRequest $request)
+    {
 
+        // search 参数用来模糊搜索商品
+        $like = '%'.$request->search.'%';
+        $tables = $request->user()->table()->where('name', 'like', $like)->get();
+
+        return new TableResource($tables);
     }
 }
 

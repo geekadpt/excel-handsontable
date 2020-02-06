@@ -61,6 +61,19 @@ export const m ={
             contact:'联系我们',
             change_language:'语言切换'
         },
+        feedback:{
+            title:'问题反馈',
+            name:'称呼',
+            email:'邮件',
+            question:'问题',
+            optional:'(必填)',
+            type:'类型',
+            age:'年龄',
+            honest:'如实填写',
+            close_button:'关闭',
+            submit_button:'提交',
+            feedback_success:'反馈成功',
+        },
     },
     profile:{
         name_label:'昵称',
@@ -119,6 +132,13 @@ export const m ={
             center:'中文',
             service:'English'
         },
+        share:{
+            switch:'允许分享',
+            cancel:'关闭窗口',
+            update:'切换状态',
+            switch_success:'切换分享状态成功',
+            switch_failed:'切换分享状态失败',
+        },
     },
     desktop:{
         my_desktop:'我的桌面',
@@ -147,6 +167,14 @@ export const m ={
         restore_success:'恢复文件成功',
         restore_failed:'恢复文件失败',
     },
-
-
+    share:{
+        unauthorization:'您没有查看该文件的权限!',
+        tip:'只读模式下不能执行编辑和上传操作',
+    },
+    search:{
+        title:'查询结果',
+        no_result:'什么都没查到',
+        failed:'查找文章失败了.',
+        view:'查看'
+    },
 };

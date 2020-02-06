@@ -58,7 +58,7 @@ export default {
      * DELETE /api/v1/trash/{id}
      */
     deleteTrash: function(data){
-        return axios.delete( HYPERCELL_CONFIG.API_URL + '/trash/'+data.sheet_id);
+        return axios.delete( HYPERCELL_CONFIG.API_URL + '/trash/'+data.table_id);
     },
     /**
      * POST /api/v1/trash
@@ -70,6 +70,33 @@ export default {
      * PATCH /api/v1/trash/{id}
      */
     restoreTrash: function(data){
-        return axios.patch( HYPERCELL_CONFIG.API_URL + '/trash/'+data.sheet_id);
+        return axios.patch( HYPERCELL_CONFIG.API_URL + '/trash/'+data.table_id);
     },
+    /**
+     * GET /api/v1/share
+     */
+    getShares: function(){
+        return axios.get( HYPERCELL_CONFIG.API_URL + '/share');
+    },
+    /**
+     * GET /api/v1/share/{id}
+     */
+    getShare: function(data){
+        return axios.get( HYPERCELL_CONFIG.API_URL + '/share/'+data.table_id);
+    },
+    /**
+     * post /api/v1/share/{id}
+     */
+    switchShare: function(data){
+        return axios.post( HYPERCELL_CONFIG.API_URL + '/share/'+data.table_id);
+    },
+    /**
+     * post /api/v1/search
+     */
+    searchTable: function(data){
+        return axios.post( HYPERCELL_CONFIG.API_URL + '/search',{
+            search:data.search
+        });
+    },
+   
 }

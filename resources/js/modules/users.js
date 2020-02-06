@@ -143,7 +143,11 @@ export const users = {
                     }
                 });
         },
-
+        logout( { commit }){
+            localStorage.removeItem('Authorization');
+            commit('setLoginToken', '');
+            commit('setMyInfo','');
+        },
 
     },
     /**

@@ -36,19 +36,21 @@
                     style="width: 300px"
                     class="ml-0 pl-4"
             >
-                <span class="hidden-sm-and-down">Google Contacts</span>
+                <span class="hidden-sm-and-down">HyperCell</span>
             </v-toolbar-title>
             <v-text-field
+                    @keyup.enter.native="searchTable"
                     flat
                     solo-inverted
                     hide-details
                     prepend-inner-icon="mdi-magnify"
-                    label="Search"
+                    :label="$t('m.layout.appbar.search')"
                     class="hidden-sm-and-down"
+                    v-model="search_content"
             />
             <v-spacer />
             <v-btn icon
-                   @click="changeLang"
+
             >
                 <v-icon>mdi-apps</v-icon>
             </v-btn>
@@ -223,12 +225,6 @@
                         </v-list-item>
                     </v-list>
                 </v-bottom-sheet>
-                <v-btn
-                        large
-                        text
-                >
-                    <v-icon>mdi-brightness-7</v-icon>
-                </v-btn>
             </div>
         </template>
         <notification></notification>
@@ -285,6 +281,78 @@
                 </v-btn>
             </v-speed-dial>
         </template>
+        <!--feedback-->
+        <template>
+            <v-dialog v-model="dialog_feedback" persistent max-width="600px">
+                <v-card>
+                    <v-card-title>
+                        <span class="headline">{{$t('m.layout.feedback.title')}}</span>
+                    </v-card-title>
+                    <template>
+                        <v-card flat>
+                            <v-snackbar
+
+                                    absolute
+                                    top
+                                    right
+                                    color="success"
+                            >
+                                <span>Registration successful!</span>
+                                <v-icon dark>mdi-checkbox-marked-circle</v-icon>
+                            </v-snackbar>
+                            <v-form ref="form" @submit.prevent="submit">
+                                <v-container fluid>
+                                    <v-row>
+                                        <v-col cols="12" sm="6">
+                                            <v-text-field
+                                                    color="purple darken-2"
+                                                    :label="$t('m.layout.feedback.name')"
+                                                    required
+                                            ></v-text-field>
+                                        </v-col>
+                                        <v-col
+                                                cols="12"
+                                                sm="6"
+                                        >
+                                            <v-text-field
+                                                    :label="$t('m.layout.feedback.email')"
+                                                    required
+                                            ></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12">
+                                            <v-textarea
+                                                    color="teal"
+                                            >
+                                                <template v-slot:label>
+                                                    <div>
+                                                        {{$t('m.layout.feedback.question')}} <small>{{$t('m.layout.feedback.optional')}} </small>
+                                                    </div>
+                                                </template>
+                                            </v-textarea>
+                                        </v-col>
+                                        <v-col cols="12" sm="6">
+                                            <v-slider
+                                                    color="orange"
+                                                    :label="$t('m.layout.feedback.age')"
+                                                    :hint="$t('m.layout.feedback.honest')"
+                                                    min="1"
+                                                    max="100"
+                                                    thumb-label
+                                            ></v-slider>
+                                        </v-col>
+                                    </v-row>
+                                </v-container>
+                            </v-form>
+                        </v-card>
+                    </template>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="blue darken-1" text @click="dialog_feedback = false">{{$t('m.layout.feedback.close_button')}}</v-btn>
+                        <v-btn color="blue darken-1" text @click="feedback">{{$t('m.layout.feedback.submit_button')}}</v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+        </template>
     </v-app>
 </template>
 
@@ -313,6 +381,8 @@
             bottom: true,
             left: false,
             transition: 'slide-y-reverse-transition',
+            search_content:'',
+            dialog_feedback:false,
 
         }),
         created(){
@@ -374,7 +444,7 @@
                         this.$router.push({name:'Trash'});
                         break;
                     case 3:
-
+                        this.dialog_feedback = true;
                         break;
                     case 4:
                         break;
@@ -383,6 +453,19 @@
                         break;
                     default:break;
                 }
+            },
+            searchTable(){
+                if(this.search_content) {
+                    let content = this.search_content;
+                    this.search_content = '';
+                    this.$router.push({name: 'Search', params: {search: content}});
+                }
+            },
+            feedback(){
+                this.dialog_feedback = false;
+                EventBus.$emit('open-message', {
+                    text: this.$t('m.layout.feedback.feedback_success')
+                });
             }
         },
 

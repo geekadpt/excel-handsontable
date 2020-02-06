@@ -143,10 +143,17 @@
                 this.$watch(this.$store.getters.getLoginStatus, function () {
                     if (this.$store.getters.getLoginStatus() === 2) {
                         this.$store.dispatch('getMyInfo');
-                        EventBus.$emit('open-message', {
-                            text: '登陆成功'
+                        this.$watch(this.$store.getters.getMyInfoStatus, function () {
+                            if (this.$store.getters.getMyInfoStatus() === 2) {
+                                this.$router.push({name:'Desktop'});
+                            }
+                            if (this.$store.getters.getMyInfoStatus() === 3) {
+                                EventBus.$emit('open-message', {
+                                    text: this.$store.getters.getLoginErrors
+                                });
+                            }
                         });
-                        this.$router.push({name:'Desktop'});
+
                     }
                     if (this.$store.getters.getLoginStatus() === 3) {
                         EventBus.$emit('open-message', {

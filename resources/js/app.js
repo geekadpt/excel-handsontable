@@ -47,7 +47,7 @@ import  {i18n} from  './plugins/vue-i18n'
 
 Vue.use(Vuetify);
 
-// 添加请求拦截器，在请求头中加token
+// 添加请求拦截器，在请求头中加 AcceptLanguage
 axios.interceptors.request.use(
     config => {
         config.headers.AcceptLanguage = i18n.locale;

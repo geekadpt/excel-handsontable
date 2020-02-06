@@ -66,6 +66,19 @@ export const m = {
             contact:'Contact Us',
             change_language:'Change Language'
         },
+        feedback:{
+            title:'Feed Back',
+            name:'Name',
+            email:'E-mail',
+            question:'Questions',
+            optional:'(requried)',
+            type:'Type',
+            age:'Age',
+            honest:'Be honest',
+            close_button:'CLOSE',
+            submit_button:'SUBMIT',
+            feedback_success:'feedback cucceed.',
+        },
     },
     profile:{
         name_label:'Name',
@@ -124,6 +137,13 @@ export const m = {
             center:'中文',
             service:'English'
         },
+        share:{
+            switch:'allow view',
+            cancel:'close',
+            update:'switch',
+            switch_success:'switch share state success',
+            switch_failed:'switch share state failed',
+        },
     },
     desktop:{
         my_desktop:'My Desktop',
@@ -153,4 +173,15 @@ export const m = {
         restore_success:'restore file success',
         restore_failed:'restore file failed',
     },
+    share:{
+        unauthorization:'You are not authorized to access the file',
+        tip:'Editing and uploading operations cannot be performed in read-only mode',
+    },
+    search:{
+        title:'Search Result',
+        no_result:'No result',
+        failed:'search file failed',
+        view:'View',
+    },
+
 };

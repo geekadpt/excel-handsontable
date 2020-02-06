@@ -2,13 +2,14 @@
 
 use Illuminate\Http\Request;
 
-//不需要登录可以访问的接口
 //路由前缀
 Route::prefix('v1')
     //命名空间
     ->namespace('Api')
     //别名
     ->name('api.v1.')
+    //中间件
+    ->middleware('change-locale')
     //路由组
     ->group(function () {
         Route::get('version', function() {
@@ -30,7 +31,9 @@ Route::prefix('v1')
         //获取某个用户详情
         Route::get('users/{user}', 'UsersController@show')
             ->name('users.show');
-
+        // 获取分享的表格
+        Route::get('share/{table}', 'TablesController@showShare')
+            ->name('share.show');
 
         // 登录后才可以访问的接口
         Route::middleware('auth:api')->group(function() {
@@ -56,6 +59,14 @@ Route::prefix('v1')
             // 恢复回收站某个文件
             Route::patch('trash/{trash}', 'TablesController@trashRestore')
                 ->name('trash.trash.restore');
+
+            // 表格分享
+            Route::post('share/{table}', 'TablesController@switchShare')
+                ->name('share.switch');
+
+            // 搜索表格
+            Route::post('search', 'TablesController@searchSheet')
+                ->name('sheet.search');
         });
     });
 
