@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>HyperCell - 新一代云端办公</title>
+    <title>SupCell - 新一代云端办公</title>
     <meta name="description" content="">
     <meta name="robots" content="all,follow">
     <!-- CSRF Token -->

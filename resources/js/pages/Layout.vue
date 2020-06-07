@@ -36,7 +36,7 @@
                     style="width: 300px"
                     class="ml-0 pl-4"
             >
-                <span class="hidden-sm-and-down">HyperCell</span>
+                <span class="hidden-sm-and-down">SupCell</span>
             </v-toolbar-title>
             <v-text-field
                     @keyup.enter.native="searchTable"
@@ -386,7 +386,6 @@
 
         }),
         created(){
-            this.$store.dispatch('getMyInfo');
             //第三方登陆
             if(_urls.getUrlParams('code') != null){
                 this.$store.dispatch('oauth', {
@@ -407,6 +406,8 @@
                         });
                     }
                 });
+            }else{
+                this.$store.dispatch('getMyInfo');
             }
         },
         methods:{

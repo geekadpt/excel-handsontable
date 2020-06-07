@@ -128,8 +128,9 @@
         },
         methods:{
             deleteTrash(index,id){
+                //console.log(id);
                 this.$store.dispatch('deleteMyTrash',{
-                    sheet_id:id
+                    table_id:id
                 });
                 this.$watch(this.$store.getters.getDeleteMyTrashStatus, function () {
                     if (this.$store.getters.getDeleteMyTrashStatus() === 2) {
@@ -170,7 +171,7 @@
             },
             restoreTrash(index,id){
                 this.$store.dispatch('restoreMyTrash',{
-                    sheet_id:id
+                    table_id:id
                 });
                 this.$watch(this.$store.getters.getRestoreMyTrashStatus, function () {
                     if (this.$store.getters.getRestoreMyTrashStatus() === 2) {

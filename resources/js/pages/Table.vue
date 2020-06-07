@@ -749,9 +749,9 @@
                     case 5:
                         this.hotSettings.columns[this.selectedCells[0][1]]={
                             type: 'date',
-                            dateFormat: 'MM/DD/YYYY',
+                            dateFormat: 'YYYY/MM/DD',
                             correctFormat: true,
-                            defaultDate: '01/01/2000',
+                            defaultDate: '2020/01/01',
                         };
                         this.hotRef.updateSettings(this.hotSettings);
                         break;
