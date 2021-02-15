@@ -50,6 +50,17 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        if ($this->isHttpException($exception)) {
+//            if (view()->exists('errors.' . $exception->getStatusCode())) {
+//                API服务器不需要返回视图
+//                return response()->view('errors.' . $exception->getStatusCode(), [], $exception->getStatusCode());
+//            }
+            //404已交给Vue处理,这里返回视图即可;
+            if($exception->getStatusCode()==404 && $request->method()=='GET'){
+                if(request()->segment(1) !== 'api')
+                    return response()->view('app');
+            }
+        }
         return parent::render($request, $exception);
     }
 }

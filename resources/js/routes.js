@@ -52,7 +52,14 @@ function requireAuth(to, from, next) {
 }
 
 export default new VueRouter({
-
+    mode:'history',
+    srcollBehavior(to,from,savedPosition){
+        if(to.hash){
+          return {
+            selector:to.hash
+          }
+        }
+    },
     routes: [
         {
             path: '/',
