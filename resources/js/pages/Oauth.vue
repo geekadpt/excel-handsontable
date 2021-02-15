@@ -27,7 +27,17 @@
                         EventBus.$emit('open-message', {
                             text: this.$t('m.layout.oauth.success')
                         });
-                        this.$router.push({name:'Desktop'});
+                        this.$watch(this.$store.getters.getMyInfoStatus, function () {
+                            if (this.$store.getters.getMyInfoStatus() === 2) {
+                                this.$router.push({name:'Desktop'});
+                            }
+                            if (this.$store.getters.getMyInfoStatus() === 3) {
+                                EventBus.$emit('open-message', {
+                                    text: this.$store.getters.getLoginErrors
+                                });
+                                this.$router.push({name:'Login'});
+                            }
+                        });
                     }
                     if (this.$store.getters.getOauthStatus() === 3) {
                         EventBus.$emit('open-message', {

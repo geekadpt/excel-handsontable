@@ -124,6 +124,11 @@ export const users = {
                     commit('setLoginToken', '');
                     commit('setMyInfo','');
                     commit( 'setGetMyInfoStatus', 3 );
+                    if(typeof error.response.data.errors === "undefined"){
+                        commit( 'setLoginErrors',error.response.data.message);
+                    }else{
+                        commit( 'setLoginErrors', error.response.data.errors[Object.keys(error.response.data.errors)[0]].toString() );
+                    }
                 });
         },
         updateMyInfo( { commit },data){

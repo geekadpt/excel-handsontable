@@ -386,9 +386,6 @@
             dialog_feedback:false,
 
         }),
-        created(){
-            this.$store.dispatch('getMyInfo');
-        },
         methods:{
             appbarMenuFunction(index){
                 switch (index) {
