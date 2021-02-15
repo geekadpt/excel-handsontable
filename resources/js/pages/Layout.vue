@@ -276,6 +276,7 @@
                         dark
                         small
                         color="red"
+                        @click="goKanYun"
                 >
                     <v-icon>mdi-help</v-icon>
                 </v-btn>
@@ -426,6 +427,7 @@
                         this.dialog_feedback = true;
                         break;
                     case 4:
+                        this.goKanYun();
                         break;
                     case 5:
                         this.sheet = true;
@@ -445,6 +447,8 @@
                 EventBus.$emit('open-message', {
                     text: this.$t('m.layout.feedback.feedback_success')
                 });
+            },goKanYun(){
+                window.location.href = "https://www.kancloud.cn/tiaohuaren/hypercell";
             }
         },
 

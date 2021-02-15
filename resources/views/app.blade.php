@@ -11,7 +11,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="{{ mix('css/app.css') }}" rel="stylesheet" type="text/css"/>
     <!-- Favicon-->
-    <link rel="icon" type="image/x-icon" href="https://mozilan.geekadpt.cn/www/img/favicon/favicon-64.ico">
+    <link rel="shortcut icon" href="https://blog-vuetify.oss-cn-beijing.aliyuncs.com/app/images/app/favicon2.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/creativetimofficial/tailwind-starter-kit/compiled-tailwind.css">
 
 </head>
