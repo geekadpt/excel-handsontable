@@ -78,6 +78,11 @@ export default new VueRouter({
                     components: Vue.component( 'Login', require( './pages/Login' ) ),
                 },
                 {
+                    path: 'oauth',
+                    name: 'oauth',
+                    components: Vue.component( 'oauth', require( './pages/Oauth' ) ),
+                },
+                {
                     path: 'desktop',
                     name: 'Desktop',
                     components: Vue.component( 'Desktop', require( './pages/Desktop' ) ),

@@ -386,29 +386,7 @@
 
         }),
         created(){
-            //第三方登陆
-            if(_urls.getUrlParams('code') != null){
-                this.$store.dispatch('oauth', {
-                    social : _urls.getUrlParams('social_type'),
-                    code : _urls.getUrlParams('code'),
-                });
-                this.$watch(this.$store.getters.getOauthStatus, function () {
-                    if (this.$store.getters.getOauthStatus() === 2) {
-                        this.$store.dispatch('getMyInfo');
-                        EventBus.$emit('open-message', {
-                            text: this.$t('m.layout.oauth.success')
-                        });
-                        this.$router.push({name:'Desktop'});
-                    }
-                    if (this.$store.getters.getOauthStatus() === 3) {
-                        EventBus.$emit('open-message', {
-                            text: this.$store.getters.getOauthErrors
-                        });
-                    }
-                });
-            }else{
-                this.$store.dispatch('getMyInfo');
-            }
+            this.$store.dispatch('getMyInfo');
         },
         methods:{
             appbarMenuFunction(index){
