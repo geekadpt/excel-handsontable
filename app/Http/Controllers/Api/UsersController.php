@@ -79,8 +79,7 @@ class UsersController extends Controller
         if ($user == null) {
             // 如果该用户不存在则将其保存到 users 表
             $newUser = new User();
-
-            $newUser->name        = $type=='weibo'?$oauthUser->getNickname():$oauthUser->getName();
+            $newUser->name        = $oauthUser->getNickname();
             $oauthUserEmail = $oauthUser->getEmail() ;
             if($oauthUserEmail !== ''){
                 User::where('email',$oauthUserEmail)->doesntExist() ? $newUser->email = $oauthUserEmail:$newUser->email = null;

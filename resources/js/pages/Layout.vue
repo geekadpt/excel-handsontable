@@ -36,7 +36,7 @@
                     style="width: 300px"
                     class="ml-0 pl-4"
             >
-                <span class="hidden-sm-and-down">SupCell</span>
+                <span class="hidden-sm-and-down">{{$t('m.app.title')}}</span>
             </v-toolbar-title>
             <v-text-field
                     @keyup.enter.native="searchTable"

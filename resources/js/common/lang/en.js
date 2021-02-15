@@ -1,4 +1,7 @@
 export const m = {
+    app: {
+        title:'Excel-Handsontable'  
+    },
     register: {
         previous: 'previous',
         next: 'next',
@@ -6,7 +9,7 @@ export const m = {
         code: 'code',
         name: 'nickname',
         password: 'password',
-        explainPage1: 'This is the phone you will use to login to your HyperCell account',
+        explainPage1: 'This is the phone you will use to login to your account',
         titlePage1: 'Phone',
         codeSending: 'sending...',
         codeSended: 'SMS verification code has been sent to your phone.',

@@ -17,7 +17,8 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         \SocialiteProviders\Manager\SocialiteWasCalled::class => [
             // add your listeners (aka providers) here
-            'SocialiteProviders\Weibo\WeiboExtendSocialite@handle',
+            'SocialiteProviders\\Weibo\\WeiboExtendSocialite@handle',
+            'SocialiteProviders\\GitHub\\GitHubExtendSocialite@handle',
         ],
         Registered::class => [
             SendEmailVerificationNotification::class,

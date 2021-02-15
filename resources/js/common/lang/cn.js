@@ -1,4 +1,7 @@
 export const m ={
+    app: {
+        title:'Excel-Handsontable'  
+    },
     register: {
         previous: '上一步',
         next: '下一步',
@@ -6,7 +9,7 @@ export const m ={
         code: '验证码',
         name: '昵称',
         password: '密码',
-        explainPage1: '这是您将用于登录 HyperCell帐户的电话',
+        explainPage1: '这是您将用于登录帐户的电话',
         titlePage1: '手机号',
         explainPage2: '请完善您的个人资料',
         titlePage2: '完善信息',
